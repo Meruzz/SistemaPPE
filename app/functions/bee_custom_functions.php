@@ -20,6 +20,10 @@ function is_root($rol)
   return in_array($rol, ['root']);
 }
 
+function is_admin($rol)
+{
+  return in_array($rol, ['admin', 'root']);
+}
 function is_profesor($rol)
 {
   return in_array($rol, ['profesor', 'admin', 'root']);

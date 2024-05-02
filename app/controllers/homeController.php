@@ -10,7 +10,6 @@ class homeController extends Controller {
     $data =
     [
       'title' => 'Home',
-      'bg'    => 'dark'
     ];
 
     register_to_bee_obj('bee_var', 'Súper Bee Var');

@@ -978,7 +978,7 @@ function create_menu($links, $slug_active = 'home') {
  */
 function get_logo() {
 	$default_logo_name = 'logo';
-	$default_logo_size = '500';
+	$default_logo_size = '100';
 	$default_logo_ext  = 'png';
 	$logo              = sprintf('%s_%s.%s', $default_logo_name, $default_logo_size, $default_logo_ext); // logo_500.png
 	if (!is_file(IMAGES_PATH.$logo)) {
@@ -998,7 +998,7 @@ function get_logo() {
 function get_favicon()
 {
 	$path        = FAVICON; // path del archivo favicon
-	$favicon     = 'favicon.ico'; // nombre del archivo favicon
+	$favicon     = 'favicon.png'; // nombre del archivo favicon
 	$type        = '';
 	$href        = '';
 	$placeholder = '<link rel="icon" type="%s" href="%s">';
