@@ -68,7 +68,7 @@ define('UPLOADED'   , ASSETS.'uploads/');
 // Set para conexión local o de desarrollo
 define('LDB_ENGINE' , 'mysql');
 define('LDB_HOST'   , 'localhost');
-define('LDB_NAME'   , '__LOCAL_DB__');
+define('LDB_NAME'   , 'bd_sistema_ppe');
 define('LDB_USER'   , 'root');
 define('LDB_PASS'   , '');
 define('LDB_CHARSET', 'utf8');

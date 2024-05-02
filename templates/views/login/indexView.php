@@ -1,47 +1,48 @@
-<?php require_once INCLUDES.'inc_header.php'; ?>
+<?php require_once INCLUDES . 'inc_header_minimal.php'; ?>
 
 <div class="container">
-  <div class="py-5 text-center">
-    <a href="<?php echo URL; ?>"><img src="<?php echo IMAGES.'bee_logo.png' ?>" alt="Bee framework" class="img-fluid" style="width: 200px;"></a>
-    <h2>Ingresa a tu cuenta</h2>
-    <p class="lead">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nam, ullam.</p>
-  </div>
+  <!-- Outer Row -->
+  <div class="row justify-content-center">
+    <div class="col-xl-10 col-lg-12 col-md-9">
 
-  <div class="row">
-    <div class="col-12">
-      <?php echo Flasher::flash(); ?>
-    </div>
+      <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+          <!-- Nested Row within Card Body -->
+          <div class="row">
+            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+            <div class="col-lg-6">
+              <div class="p-5">
+                <div class="text-center">
+                  <h1 class="h4 text-gray-900 mb-4"><?php echo sprintf('¡Bienvenido a %s!', get_sitename()) ?></h1>
+                </div>
+                <?php echo Flasher::flash(); ?>
 
-    <!-- formulario -->
-    <div class="col-xl-12">
-      <div class="card">
-        <div class="card-header">
-          <h4>Ingresa a tu cuenta</h4>
-        </div>
-        <div class="card-body">
-          <form action="login/post_login" method="post" novalidate>
-            <?php echo insert_inputs(); ?>
-            
-            <div class="mb-3 row">
-              <div class="col-xl-6">
-                <label for="usuario">Usuario</label>
-                <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Walter White" required>
-                <small class="text-muted">Ingresa bee</small>
-              </div>
-              <div class="col-xl-6">
-                <label for="password">Contraseña</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-                <small class="text-muted">Ingresa 123456</small>
+                <form class="user" action="login/post_login" method="post">
+                  <?php echo insert_inputs(); ?>
+
+                  <div class="form-group">
+                    <input type="email" class="form-control form-control-user" name="email" id="email" aria-describedby="emailHelp" placeholder="Ingresa tu correo electrónico..." required>
+                  </div>
+
+                  <div class="form-group">
+                    <input type="password" class="form-control form-control-user" name="password" id="password" placeholder="Ingresa tu contraseña..." required>
+                  </div>
+
+                  <button class="btn btn-primary btn-user btn-block" type="submit">Inicio de Sesión</button>
+                </form>
+                <hr>
+                <div class="text-center">
+                  <a class="small" href="forgot-password.html">¿Olvidase tu contraseña?</a>
+                </div>
+
               </div>
             </div>
-
-            <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
-          </form>
+          </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
 
-<?php require_once INCLUDES.'inc_footer_v2.php'; ?>
-
+<?php require_once INCLUDES . 'inc_footer_minimal.php'; ?>
