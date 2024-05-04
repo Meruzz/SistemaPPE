@@ -6,7 +6,7 @@
 
   <meta charset="UTF-8">
 
-  <title><?php echo isset($sd_title) ? $sd_title . ' - ' . get_sitename() : 'Bienvenido - ' . get_sitename(); ?></title>
+  <title><?php echo isset($sd->title) ? $sd->title . ' - ' . get_sitename() : 'Bienvenido - ' . get_sitename(); ?></title>
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">

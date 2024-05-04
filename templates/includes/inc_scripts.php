@@ -1,4 +1,3 @@
-<!-- scripts necessarios -->
 <!-- Bootstrap core JavaScript-->
 <script src="<?php echo ASSETS . 'vendor/jquery/jquery.min.js'; ?>"></script>
 <script src="<?php echo ASSETS . 'vendor/bootstrap/js/bootstrap.bundle.min.js'; ?>"></script>
@@ -10,7 +9,10 @@
 <script src="<?php echo JS . 'sb-admin-2.min.js'; ?>"></script>
 
 <!-- Page level plugins -->
-<script src="<?php echo ASSETS . 'vendor/chart.js/Chart.min.js'; ?>"></script>
+<script src="<?php echo ASSETS.'vendor/chart.js/Chart.min.js'; ?>"></script>
+<script src="<?php echo ASSETS.'vendor/datatables/jquery.dataTables.min.js'; ?>"></script>
+<script src="<?php echo ASSETS.'vendor/datatables/dataTables.bootstrap4.min.js'; ?>"></script>
+
 
 <!-- Page level custom scripts -->
 <script src="<?php echo JS . 'demo/chart-area-demo.js'; ?>"></script>

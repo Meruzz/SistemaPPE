@@ -1,5 +1,9 @@
- <?php $slug = isset($d->slug) || !empty($d->slug) ? $d->slug : 'dashboard'; ?>
+ <?php
+    $slug = isset($d->slug) && !empty($d->slug) ? $d->slug : 'dashboard';
+    ?>
 
+
+ 
  <!-- Sidebar -->
  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
