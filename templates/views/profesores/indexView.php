@@ -1,14 +1,49 @@
-<?php require_once INCLUDES.'inc_header.php'; ?>
-      <div class="container">
-        <div class="row">
-          <div class="col-6 text-center offset-xl-3">
-            <a href="<?php echo URL; ?>"><img src="<?php echo IMAGES.'bee_logo.png' ?>" alt="Bee framework" class="img-fluid" style="width: 200px;"></a>
-            <h2 class="mt-5 mb-3"><span class="text-warning">Bee</span> framework</h2>
-            <!-- contenido -->
-            <h1><?php echo $d->msg; ?></h1>
-            <!-- ends -->
-          </div>
-        </div>
+<?php require_once INCLUDES . 'inc_header.php'; ?>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary"><?php echo $d->title; ?></h6>
+  </div>
+  <div class="card-body">
+    <?php if (!empty($d->profesores ->rows)) : ?>
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th width="5%" >#</th>
+              <th>Nombre Completo</th>
+              <th>Correo Electrónico</th>
+              <th>Status</th>
+              <th width="20%">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($d->profesores->rows as $p ): ?>
+              <tr>
+              <td><?php echo sprintf('<a href="profesores/ver/%s">%s</a>', $p->numero, $p->numero); ?></td>
+              <td><?php echo empty($p->nombre_completo)? '<span class="text-muted">Sin nombre</span>':add_ellipsis($p->nombre_completo, 50);?>  </td>
+              <td><?php echo empty($p-> email)? '<span class="text-muted">Sin correo electrónico</span>':$p-> email;?>  </td>
+              <td><?php echo format_estado_usuario($p->status);?>  </td>
+              <td>
+
+              <a href="<?php echo 'profesores/ver/' .$p->numero; ?>" class="btn btn-sm btn-success"><i class="fas fa-eye"></i></a>
+              <a href="<?php echo buildURL('profesores/borrar/' .$p->id); ?>" class="btn btn-sm btn-danger confirmar"><i class="fas fa-trash"></i></a>
+
+              </td>
+            </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+        <?php echo $d->profesores->pagination; ?>
       </div>
-      
-      <?php require_once INCLUDES.'inc_footer.php'; ?>
+    <?php else : ?>
+      <div class="py-5 text-center">
+        <img src="<?php echo IMAGES . 'undraw_no_data.svg'; ?>" alt="No hay registros" style="width: 150px;">
+        <p class="text-muted">No hay registros en la base de datos.</p>
+      </div>
+    <?php endif; ?>
+  </div>
+</div>
+
+<?php require_once INCLUDES . 'inc_footer.php'; ?>
