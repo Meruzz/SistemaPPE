@@ -25,6 +25,11 @@ class materiaModel extends Model {
     return ($rows = parent::query($sql)) ? $rows : [];
   }
 
+  static function all_paginated()
+  {
+    $sql = 'SELECT * FROM materias ORDER BY id DESC';
+    return PaginationHandler::paginate($sql);
+  }
   static function by_id($id)
   {
     // Un registro con $id

@@ -6,7 +6,7 @@
     <h6 class="m-0 font-weight-bold text-primary"><?php echo $d->title; ?></h6>
   </div>
   <div class="card-body">
-    <?php if (!empty($d->materias)) : ?>
+    <?php if (!empty($d->materias ->rows)) : ?>
       <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
@@ -17,14 +17,13 @@
             </tr>
           </thead>
           <tbody>
-            <?php foreach ($d->materias as $m ): ?>
+            <?php foreach ($d->materias->rows as $m ): ?>
               <tr>
               <td><?php echo sprintf('<a href="materias/ver/%s">%s</a>', $m->id, $m->id); ?></td>
               <td><?php echo add_ellipsis($m->nombre, 50);?>  </td>
               <td>
 
               <a href="<?php echo 'materias/ver/' .$m->id; ?>" class="btn btn-sm btn-success"><i class="fas fa-eye"></i></a>
-              <a href="<?php echo 'materias/editar/' .$m->id; ?>" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
               <a href="<?php echo buildURL('materias/borrar/' .$m->id); ?>" class="btn btn-sm btn-danger confirmar"><i class="fas fa-trash"></i></a>
 
               </td>
@@ -32,6 +31,7 @@
             <?php endforeach; ?>
           </tbody>
         </table>
+        <?php echo $d->materias->pagination; ?>
       </div>
     <?php else : ?>
       <div class="py-5 text-center">
