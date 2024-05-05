@@ -3,8 +3,7 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
 
 <!-- Todo plugin debe ir debajo de esta línea -->
-<!-- Toastr CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
 
 <!-- WaitMe CSS -->
 <link rel="stylesheet" href="<?php echo PLUGINS.'waitMe/waitMe.min.css'; ?>">
@@ -21,6 +20,8 @@
 
 <!-- Estilos de plugins -->
 <link href="<?php echo ASSETS. 'vendor/datatables/dataTables.bootstrap4.min.css';?>" rel="stylesheet">
+<!-- Toastr CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
 <!-- Estilos registrados manualmente -->
 <?php echo load_styles(); ?>

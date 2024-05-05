@@ -1,6 +1,7 @@
-<?php 
+<?php
 
-class ajaxController extends Controller {
+class ajaxController extends Controller
+{
 
 
   /**
@@ -52,7 +53,7 @@ class ajaxController extends Controller {
    * @var string
    */
   private $hook_name        = 'bee_hook'; // Si es modificado, actualizar el valor en la función core insert_inputs()
-  
+
   /**
    * parámetros que serán requeridos en TODAS las peticiones pasadas a ajaxController
    * si uno de estos no es proporcionado la petición fallará
@@ -72,7 +73,7 @@ class ajaxController extends Controller {
   {
     // Parsing del cuerpo de la petición
     $this->r_type = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : null;
-    $this->data   = in_array($this->r_type, ['PUT','DELETE','HEADERS','OPTIONS']) ? parse_str(file_get_contents("php://input"), $this->parsed) : ($this->r_type === 'GET' ? $_GET : $_POST);
+    $this->data   = in_array($this->r_type, ['PUT', 'DELETE', 'HEADERS', 'OPTIONS']) ? parse_str(file_get_contents("php://input"), $this->parsed) : ($this->r_type === 'GET' ? $_GET : $_POST);
     $this->data   = $this->parsed !== null ? $this->parsed : $this->data;
     $this->hook   = isset($this->data['hook']) ? $this->data['hook'] : null;
     $this->action = isset($this->data['action']) ? $this->data['action'] : null;
@@ -85,14 +86,14 @@ class ajaxController extends Controller {
     }
 
     // Validar que se pase un verbo válido y aceptado
-    if(!in_array($this->action, $this->accepted_actions)) {
+    if (!in_array($this->action, $this->accepted_actions)) {
       http_response_code(403);
       json_output(json_build(403));
     }
-    
+
     // Validación de que todos los parámetros requeridos son proporcionados
     foreach ($this->required_params as $param) {
-      if(!isset($this->data[$param])) {
+      if (!isset($this->data[$param])) {
         http_response_code(403);
         json_output(json_build(403));
       }
@@ -124,7 +125,7 @@ class ajaxController extends Controller {
     501 Not Implemented
     503 Service Unavailable
     550 Permission denied
-    */
+     */
     json_output(json_build(403));
   }
 
@@ -147,14 +148,13 @@ class ajaxController extends Controller {
       $mov->type        = $_POST['type'];
       $mov->description = $_POST['description'];
       $mov->amount      = (float) $_POST['amount'];
-      if(!$id = $mov->add()) {
+      if (!$id = $mov->add()) {
         json_output(json_build(400, null, 'Hubo error al guardar el registro'));
       }
-  
+
       // se guardó con éxito
       $mov->id = $id;
       json_output(json_build(201, $mov->one(), 'Movimiento agregado con éxito'));
-      
     } catch (Exception $e) {
       json_output(json_build(400, null, $e->getMessage()));
     }
@@ -168,12 +168,12 @@ class ajaxController extends Controller {
 
       $taxes              = (float) get_option('taxes') < 0 ? 16 : get_option('taxes');
       $use_taxes          = get_option('use_taxes') === 'Si' ? true : false;
-      
+
       $total_movements    = $movs[0]['total'];
       $total              = $movs[0]['total_incomes'] - $movs[0]['total_expenses'];
       $subtotal           = $use_taxes ? $total / (1.0 + ($taxes / 100)) : $total;
       $taxes              = $subtotal * ($taxes / 100);
-      
+
       $calculations       = [
         'total_movements' => $total_movements,
         'subtotal'        => $subtotal,
@@ -183,10 +183,9 @@ class ajaxController extends Controller {
 
       $data = get_module('movements', ['movements' => $movs, 'cal' => $calculations]);
       json_output(json_build(200, $data));
-    } catch(Exception $e) {
+    } catch (Exception $e) {
       json_output(json_build(400, $e->getMessage()));
     }
-
   }
 
   function bee_delete_movement()
@@ -195,12 +194,11 @@ class ajaxController extends Controller {
       $mov     = new movementModel();
       $mov->id = $_POST['id'];
 
-      if(!$mov->delete()) {
+      if (!$mov->delete()) {
         json_output(json_build(400, null, 'Hubo error al borrar el registro'));
       }
 
       json_output(json_build(200, null, 'Movimiento borrado con éxito'));
-      
     } catch (Exception $e) {
       json_output(json_build(400, null, $e->getMessage()));
     }
@@ -213,13 +211,13 @@ class ajaxController extends Controller {
       $movement->id = $_POST['id'];
       $mov          = $movement->one();
 
-      if(!$mov) {
+      if (!$mov) {
         json_output(json_build(400, null, 'No existe el movimiento'));
       }
 
       $data = get_module('updateForm', $mov);
       json_output(json_build(200, $data));
-    } catch(Exception $e) {
+    } catch (Exception $e) {
       json_output(json_build(400, $e->getMessage()));
     }
   }
@@ -232,13 +230,12 @@ class ajaxController extends Controller {
       $mov->type        = $_POST['type'];
       $mov->description = $_POST['description'];
       $mov->amount      = (float) $_POST['amount'];
-      if(!$mov->update()) {
+      if (!$mov->update()) {
         json_output(json_build(400, null, 'Hubo error al guardar los cambios'));
       }
-  
+
       // se guardó con éxito
       json_output(json_build(200, $mov->one(), 'Movimiento actualizado con éxito'));
-      
     } catch (Exception $e) {
       json_output(json_build(400, null, $e->getMessage()));
     }
@@ -247,19 +244,17 @@ class ajaxController extends Controller {
   function bee_save_options()
   {
     $options =
-    [
-      'use_taxes' => $_POST['use_taxes'],
-      'taxes'     => (float) $_POST['taxes'],
-      'coin'      => $_POST['coin']
-    ];
+      [
+        'use_taxes' => $_POST['use_taxes'],
+        'taxes'     => (float) $_POST['taxes'],
+        'coin'      => $_POST['coin']
+      ];
 
     foreach ($options as $k => $option) {
       try {
-        if(!$id = optionModel::save($k, $option)) {
+        if (!$id = optionModel::save($k, $option)) {
           json_output(json_build(400, null, sprintf('Hubo error al guardar la opción %s', $k)));
         }
-    
-        
       } catch (Exception $e) {
         json_output(json_build(400, null, $e->getMessage()));
       }
@@ -271,4 +266,85 @@ class ajaxController extends Controller {
   ///////////////////////////////////////////////////////
   /////////////// TERMINA PROYECTO DEMO /////////////////
   ///////////////////////////////////////////////////////
+
+  function get_materias_disponibles_profesor()
+  {
+    try {
+      if (!check_get_data(['_t', 'id_profesor'], $_GET) || !Csrf::validate($_GET['_t'])) {
+        throw new Exception(get_notificaciones(0));
+      }
+
+      $id = clean($_GET["id_profesor"]);
+
+      if (!$profesor = profesorModel::by_id($id)) {
+        throw new Exception('No existe el profesor en la base de datos.');
+      }
+
+      $materias = materiaModel::disponibles_profesor($profesor['id']);
+      json_output(json_build(200, $materias));
+    } catch (Exception $e) {
+      json_output(json_build(400, null, $e->getMessage()));
+    }
+  }
+
+  function get_materias_profesor()
+{
+    try {
+        if (!check_get_data(['_t', 'id_profesor'], $_GET) || !Csrf::validate($_GET["_t"])) {
+            throw new Exception(get_notificaciones());
+        }
+
+        $id = clean($_GET["id_profesor"]);
+
+        if (!$profesor = profesorModel::by_id($id)) {
+            throw new Exception('No existe el profesor en la base de datos.');
+        }
+
+        $materias = materiaModel::materias_profesor($profesor['id']);
+        $html = get_module('profesores/materias', $materias);
+        json_output(json_build(200, $html));
+    } catch (Exception $e) {
+        json_output(json_build(400, null, $e->getMessage()));
+    }
+}
+
+function add_materia_profesor()
+{
+    try {
+        if (!check_posted_data(['csrf', 'id_profesor', 'id_materia'], $_POST) || !Csrf::validate($_POST['csrf'])) {
+            throw new Exception(get_notificaciones(0));
+        }
+
+        $id_materia = clean($_POST['id_materia']);
+        $id_profesor = clean($_POST['id_profesor']);
+
+        if (!$profesor = profesorModel::by_id($id_profesor)) {
+            throw new Exception('No existe el profesor en la base de datos.');
+        }
+
+        if (!$materia = materiaModel::by_id($id_materia)) {
+            throw new Exception('No existe la materia en la base de datos.');
+        }
+
+        // Validar que no esté ya asignada la materia
+        if (materiaModel::list('materias_profesores', ['id_materia' => $id_materia, 'id_profesor' => $id_profesor])) {
+            throw new Exception(sprintf('La materia <b>%s</b> ya está asignada al profesor <b>%s</b>.', $materia['nombre'], $profesor['nombres']));
+        }
+
+        // Asignar la materia al profesor
+        if (profesorModel::asignar_materia($id_profesor, $id_materia) === false) {
+            throw new Exception(get_notificaciones(2));
+        }
+
+        $msg = sprintf('Nueva materia <b>%s</b> asignada con éxito.', $materia['nombre']);
+
+        json_output(json_build(201, $profesor, $msg));
+    } catch (Exception $e) {
+        json_output(json_build(400, null, $e->getMessage()));
+    } catch (PDOException $e) {
+        json_output(json_build(400, null, $e->getMessage()));
+    }
+}
+
+
 }

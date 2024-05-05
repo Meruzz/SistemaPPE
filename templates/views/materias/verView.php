@@ -1,7 +1,7 @@
 <?php require_once INCLUDES . 'inc_header.php'; ?>
 
 <div class="row">
-    <div class="col-xl-6">
+    <div class="col-xl-6 col-md-6 col-12">
         <!-- Collapsable Card Example -->
         <div class="card shadow mb-4">
             <!-- Card Header - Accordion -->
