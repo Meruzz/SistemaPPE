@@ -59,5 +59,20 @@ class profesorModel extends Model
     return $id;
 }
 
+static function quitar_materia($id_profesor, $id_materia)
+{
+    $data = [
+        'id_materia' => $id_materia,
+        'id_profesor' => $id_profesor,
+    ];
+
+    return (self::remove('materias_profesores', $data)) ? true : false;
+}
+
+static function eliminar($id_profesor)
+{
+  $sql = 'DELETE u, mp FROM usuarios u JOIN materias_profesores mp ON mp.id_profesor = u.id WHERE u.id = :id AND u.rol = "profesor"';
+  return(parent::query($sql, ['id'=>$id_profesor]))?true:false;
+}
 
 }

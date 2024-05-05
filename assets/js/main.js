@@ -514,7 +514,7 @@ $(document).ready(function () {
   }
   get_materias_profesor();
 
-  
+  //Agregar nueva materia al profesor
   $("#profesor_asignar_materia_form").on("submit", add_materia_profesor);
   function add_materia_profesor(e) {
     e.preventDefault();
@@ -562,6 +562,63 @@ $(document).ready(function () {
       })
       .always(function () {
         form.waitMe("hide");
+      });
+  }
+
+  //Quitar materia de profesor
+  // Configurar el evento de clic
+  $("body").on("click", ".quitar_materia_profesor", quitar_materia_profesor);
+
+  function quitar_materia_profesor(e) {
+    e.preventDefault();
+
+    // Recuperar los datos necesarios
+    var btn = $(this),
+      wrapper = $(".wrapper_materias_profesor"),
+      csrf = Bee.csrf,
+      id_materia = btn.data("id"),
+      id_profesor = wrapper.data("id"),
+      li = btn.closest("li"),
+      action = "delete",
+      hook = "bee_hook";
+
+    // Confirmar con el usuario
+    if (!confirm("¿Estás seguro?")) return false;
+
+    // Realizar la petición AJAX
+    $.ajax({
+      url: "ajax/quitar_materia_profesor",
+      type: "post",
+      dataType: "json",
+      cache: false,
+      data: {
+        csrf: csrf,
+        id_materia: id_materia,
+        id_profesor: id_profesor,
+        action: action,
+        hook: hook,
+      },
+      beforeSend: function () {
+        li.waitMe();
+      },
+    })
+      .done(function (res) {
+        // Manejar la respuesta exitosa
+        if (res.status == 200) {
+          toastr.success(res.msg, "¡Bien!");
+          li.fadeOut();
+          get_materias_disponibles_profesor();
+          get_materias_profesor(); 
+        } else {
+          toastr.error(res.msg, "¡Upss!");
+        }
+      })
+      .fail(function (err) {
+        // Manejar la respuesta de error
+        toastr.error("Hubo un error en la petición", "¡Upss!");
+      })
+      .always(function () {
+        li.waitMe("hide");
       });
   }
 });

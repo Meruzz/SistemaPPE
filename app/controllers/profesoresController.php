@@ -43,9 +43,6 @@ class profesoresController extends Controller
       Redirect::back();
     }
 
-/*     debug(materiaModel::materias_profesor($profesor['id']));
-    die; */
-
     $data = [
       'title'        => sprintf('Profesor #%s', $profesor['numero']),
       'slug'         => 'profesores',
@@ -169,6 +166,36 @@ class profesoresController extends Controller
   }
   function borrar($id)
   {
-    // Proceso de borrado
+
+    try {
+      if (!check_get_data(['_t'], $_GET) || !Csrf::validate($_GET['_t'])) {
+        throw new Exception(get_notificaciones(0));
+      }
+
+      //Validar rol
+      if (!is_admin(get_user_role())) {
+        throw new Exception(get_notificaciones(1));
+      }
+
+      // Validar que el profesor exista
+      if (!$profesor = profesorModel::by_id($id)) {
+        throw new Exception('No existe el profesor en la base de datos.');
+      }
+
+      //Borramos el registro y sus conexiones
+      if (profesorModel::eliminar($profesor['id']) === false) {
+        throw new Exception(get_notificaciones(4));
+    }
+    
+    Flasher::new(sprintf('Profesor <b>%s</b> borrado con éxito.', $profesor['nombre_completo']), 'success');
+    Redirect::to('profesores');
+
+    } catch (PDOException $e) {
+      Flasher::new($e->getMessage(), 'danger');
+      Redirect::back();
+    } catch (Exception $e) {
+      Flasher::new($e->getMessage(), 'danger');
+      Redirect::back();
+    }
   }
 }
