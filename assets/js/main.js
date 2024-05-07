@@ -459,6 +459,9 @@ $(document).ready(function () {
           select.html(opciones);
           $("button", form).attr("disabled", false);
         } else {
+          select.html(
+            "<option disabled selected>No hay opciones disponibles.</option>"
+          );
           $("button", form).attr("disabled", true);
           toastr.error(res.msg, "¡Upss!");
         }
@@ -568,7 +571,6 @@ $(document).ready(function () {
   //Quitar materia de profesor
   // Configurar el evento de clic
   $("body").on("click", ".quitar_materia_profesor", quitar_materia_profesor);
-
   function quitar_materia_profesor(e) {
     e.preventDefault();
 
@@ -608,7 +610,225 @@ $(document).ready(function () {
           toastr.success(res.msg, "¡Bien!");
           li.fadeOut();
           get_materias_disponibles_profesor();
-          get_materias_profesor(); 
+          get_materias_profesor();
+        } else {
+          toastr.error(res.msg, "¡Upss!");
+        }
+      })
+      .fail(function (err) {
+        // Manejar la respuesta de error
+        toastr.error("Hubo un error en la petición", "¡Upss!");
+      })
+      .always(function () {
+        li.waitMe("hide");
+      });
+  }
+
+  function get_materias_disponibles_grupo() {
+    var form = $("#grupo_asignar_materia_form"),
+      select = $("select", form),
+      id_grupo = $('input[name="id_grupo"]', form).val(),
+      wrapper = $(".wrapper_materias_grupo"),
+      opciones = "",
+      _t = Bee.csrf,
+      action = "get",
+      hook = "bee_hook";
+
+    if (form.length == 0) return;
+
+    // Limpiar las opciones al cargar
+    select.html("");
+
+    // AJAX
+    $.ajax({
+      url: "ajax/get_materias_disponibles_grupo",
+      type: "get",
+      dataType: "json",
+      data: {
+        _t,
+        id_grupo,
+        action,
+        hook,
+      },
+      beforeSend: function () {
+        wrapper.waitMe();
+      },
+    })
+      .done(function (res) {
+        if (res.status === 200) {
+          if (res.data.length === 0) {
+            /* toastr.error('No hay materias disponibles para el profesor.', '¡Upss!'); */
+            select.html(
+              "<option disabled selected>No hay opciones disponibles.</option>"
+            );
+            $("button", form).attr("disabled", true);
+            return;
+          }
+
+          $.each(res.data, function (i, m) {
+            opciones +=
+              '<option value="' +
+              m.id +
+              '">' +
+              m.materia +
+              " impartida por " +
+              m.profesor +
+              "</option>";
+          });
+
+          select.html(opciones);
+          $("button", form).attr("disabled", false);
+        } else {
+          select.html(
+            "<option disabled selected>No hay opciones disponibles.</option>"
+          );
+          $("button", form).attr("disabled", true);
+          toastr.error(res.msg, "¡Upss!");
+        }
+      })
+      .fail(function (err) {
+        toastr.error("Hubo un error en la petición.", "¡Upss!");
+      })
+      .always(function () {
+        wrapper.waitMe("hide");
+      });
+  }
+  get_materias_disponibles_grupo();
+
+  function get_materias_grupo() {
+    var wrapper = $(".wrapper_materias_grupo"),
+      id_grupo = wrapper.data("id"),
+      _t = Bee.csrf,
+      action = "get",
+      hook = "bee_hook";
+
+    if (wrapper.length == 0) return;
+
+    // AJAX
+    $.ajax({
+      url: "ajax/get_materias_grupo",
+      type: "get",
+      dataType: "json",
+      data: {
+        _t,
+        id_grupo,
+        action,
+        hook,
+      },
+      beforeSend: function () {
+        wrapper.waitMe();
+      },
+    })
+      .done(function (res) {
+        if (res.status === 200) {
+          wrapper.html(res.data);
+        } else {
+          wrapper.html(res.msg);
+          toastr.error(res.msg, "¡Upss!");
+        }
+      })
+      .fail(function (err) {
+        toastr.error("Hubo un error en la petición.", "¡Upss!");
+      })
+      .always(function () {
+        wrapper.waitMe("hide");
+      });
+  }
+  get_materias_grupo();
+
+  $("#grupo_asignar_materia_form").on("submit", add_materia_grupo);
+  function add_materia_grupo(e) {
+    e.preventDefault();
+
+    var form = $("#grupo_asignar_materia_form"),
+      select = $("select", form),
+      id_mp = select.val(),
+      id_grupo = $('input[name="id_grupo"]', form).val(),
+      csrf = $('input[name="csrf"]', form).val(),
+      action = "post",
+      hook = "bee_hook";
+
+    if (id_mp === undefined || id_mp === "") {
+      toastr.error("Selecciona una materia válida.");
+      return;
+    }
+
+    // AJAX
+    $.ajax({
+      url: "ajax/add_materia_grupo",
+      type: "post",
+      dataType: "json",
+      data: {
+        csrf,
+        id_mp,
+        id_grupo,
+        action,
+        hook,
+      },
+      beforeSend: function () {
+        form.waitMe();
+      },
+    })
+      .done(function (res) {
+        if (res.status === 201) {
+          toastr.success(res.msg);
+          get_materias_disponibles_grupo();
+          get_materias_grupo();
+        } else {
+          toastr.error(res.msg, "¡Upss!");
+        }
+      })
+      .fail(function (err) {
+        toastr.error("Hubo un error en la petición.", "¡Upss!");
+      })
+      .always(function () {
+        form.waitMe("hide");
+      });
+  }
+
+  //Quitar materia de grupo
+  // Configurar el evento de clic
+  $("body").on("click", ".quitar_materia_grupo", quitar_materia_grupo);
+  function quitar_materia_grupo(e) {
+    e.preventDefault();
+
+    // Recuperar los datos necesarios
+    var btn = $(this),
+      wrapper = $(".wrapper_materias_grupo"),
+      csrf = Bee.csrf,
+      id_mp = btn.data("id"),
+      id_grupo = wrapper.data("id"),
+      li = btn.closest("li"),
+      action = "delete",
+      hook = "bee_hook";
+
+    // Confirmar con el usuario
+    if (!confirm("¿Estás seguro?")) return false;
+
+    // Realizar la petición AJAX
+    $.ajax({
+      url: "ajax/quitar_materia_grupo",
+      type: "post",
+      dataType: "json",
+      cache: false,
+      data: {
+        csrf,
+        id_mp,
+        id_grupo,
+        action,
+        hook,
+      },
+      beforeSend: function () {
+        li.waitMe();
+      },
+    })
+      .done(function (res) {
+        // Manejar la respuesta exitosa
+        if (res.status == 200) {
+          toastr.success(res.msg, "¡Bien!");
+          li.fadeOut();
+          get_materias_disponibles_grupo();
+          get_materias_grupo();
         } else {
           toastr.error(res.msg, "¡Upss!");
         }
