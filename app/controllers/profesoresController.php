@@ -24,6 +24,11 @@ class profesoresController extends Controller
 
   function index()
   {
+    if (!is_admin(get_user_role())) {
+      Flasher::new(get_notificaciones(), 'danger');
+      Redirect::back();
+    }
+    
     $data =
       [
         'title' => 'Todas los Profesores',
