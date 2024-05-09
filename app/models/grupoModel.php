@@ -10,6 +10,7 @@ class grupoModel extends Model
 {
     public static $t1   = 'grupos'; // Nombre de la tabla en la base de datos;
     public static $t2   = 'grupos_materias';
+    public static $t3   = 'grupos_alumnos';
     // Nombre de tabla 2 que talvez tenga conexión con registros
     //public static $t2 = '__tabla 2___'; 
     //public static $t3 = '__tabla 3___'; 
@@ -42,8 +43,8 @@ class grupoModel extends Model
 
     static function materias_disponibles($id)
     {
-        $sql = 
-        'SELECT 
+        $sql =
+            'SELECT 
             mp.id,
             m.nombre AS materia,
             u.nombres AS profesor
@@ -60,14 +61,14 @@ class grupoModel extends Model
                 WHERE
                     gm.id_grupo = :id_grupo
             )';
-    
+
         return ($rows = parent::query($sql, ['id_grupo' => $id])) ? $rows : [];
     }
-    
+
     static function materias_asignadas($id)
     {
-        $sql = 
-        'SELECT 
+        $sql =
+            'SELECT 
             mp.id,
             m.id AS id_materia,
             m.nombre AS materia,
@@ -87,31 +88,67 @@ class grupoModel extends Model
                 WHERE
                     gm.id_grupo = :id_grupo
             )';
-    
+
         return ($rows = parent::query($sql, ['id_grupo' => $id])) ? $rows : [];
     }
 
     static function asignar_materia($id_grupo, $id_mp)
     {
-       $data =
-       [
-        'id_grupo' => $id_grupo,
-        'id_mp' => $id_mp,
-       ];
-       if (!$id =self::add( self::$t2,$data)) return false;
-       return $id;
+        $data =
+            [
+                'id_grupo' => $id_grupo,
+                'id_mp' => $id_mp,
+            ];
+        if (!$id = self::add(self::$t2, $data)) return false;
+        return $id;
     }
-    
+
     static function quitar_materia($id_grupo, $id_mp)
     {
         $data =
-        [
-            'id_grupo' => $id_grupo,
-            'id_mp' => $id_mp,
-        ];
-       
+            [
+                'id_grupo' => $id_grupo,
+                'id_mp' => $id_mp,
+            ];
+
         return (self::remove(self::$t2, $data)) ? true : false;
     }
 
-    
+    static function alumnos_asignados($id_grupo)
+    {
+        $sql =
+            'SELECT 
+            u.*
+        FROM
+            usuarios u
+        JOIN grupos_alumnos ga ON u.id = ga.id_alumno
+        JOIN grupos g ON g.id = ga.id_grupo
+        WHERE
+            g.id =:id
+        AND u.rol = "alumno"';
+
+        return ($rows = parent::query($sql, ['id' => $id_grupo])) ? $rows : [];
+    }
+
+    static function quitar_alumno($id_grupo, $id_alumno)
+    {
+        $data =
+            [
+                'id_grupo' => $id_grupo,
+                'id_alumno' => $id_alumno,
+            ];
+
+        return (self::remove(self::$t3, $data)) ? true : false;
+    }
+
+    static function eliminar($id_grupo)
+    {
+        $sql = 
+        'DELETE g, gm, ga 
+        FROM grupos g 
+        JOIN grupos_materias gm ON g.id = gm.id_grupo
+        JOIN grupos_alumnos ga ON g.id = ga.id_grupo
+        WHERE g.id = :id';
+        return (parent::query($sql, ['id' => $id_grupo])) ? true : false;
+    }
 }

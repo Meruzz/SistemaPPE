@@ -2,7 +2,7 @@
 
 <div class="row">
     <!-- Card de Grupos -->
-    <div class="col-xl-3 col-md-6 col-12">
+    <div class="col-xl-4 col-md-6 col-12">
         <!-- Collapsable Card Example -->
         <div class="card shadow mb-4">
             <!-- Card Header - Accordion -->
@@ -53,11 +53,11 @@
                 <div class="card-body">
                     <?php if ($d->g->horario != null) : ?>
                         <?php if (is_file(UPLOADS . $d->g->horario)) : ?>
-                            <a href="<?php echo UPLOADED.$d->g->horario; ?>" data-lightbox="Horario" title="<?php echo sprintf('Horario del grupo %s', $d->g->nombre); ?>">
-                                <img src="<?php echo UPLOADED.$d->g->horario; ?>" alt="<?php echo sprintf('Horario del grupo %s', $d->g->nombre); ?>" class="img-fluid img-thumbnail">
+                            <a href="<?php echo UPLOADED . $d->g->horario; ?>" data-lightbox="Horario" title="<?php echo sprintf('Horario del grupo %s', $d->g->nombre); ?>">
+                                <img src="<?php echo UPLOADED . $d->g->horario; ?>" alt="<?php echo sprintf('Horario del grupo %s', $d->g->nombre); ?>" class="img-fluid img-thumbnail">
                             </a>
                         <?php else : ?>
-                            <p class="text-muted"><?php echo sprintf('El archivo <b>%s</b> no existe o está dañado.', $d->g->horario);?></p>
+                            <p class="text-muted"><?php echo sprintf('El archivo <b>%s</b> no existe o está dañado.', $d->g->horario); ?></p>
                         <?php endif; ?>
                     <?php else : ?>
                         No hay un horario definido aún para este grupo.
@@ -68,7 +68,7 @@
         </div>
     </div>
     <!-- Card de materias-profesores -->
-    <div class="col-xl-5 col-md-6 col-12">
+    <div class="col-xl-4 col-md-6 col-12">
         <!-- Collapsable Card Example -->
         <div class="card shadow mb-4">
             <!-- Card Header - Accordion -->
@@ -101,6 +101,24 @@
         </div>
     </div>
 
+    <!-- Card de Alumnos -->
+    <div class="col-xl-4 col-md-6 col-12">
+        <!-- Collapsable Card Example -->
+        <div class="card shadow mb-4">
+            <!-- Card Header - Accordion -->
+            <a href="#grupo_alumnos" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="grupo_alumnos">
+                <h6 class="m-0 font-weight-bold text-primary">Alumnos</h6>
+            </a>
+            <!-- Card Content - Collapse -->
+            <div class="collapse show" id="grupo_alumnos">
+                <div class="card-body">
+                    <div class="wrapper_alumnos_grupo" data-id="<?php echo $d->g->id; ?>">
+                        <!-- ajax filled -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 

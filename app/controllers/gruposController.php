@@ -160,9 +160,10 @@ class gruposController extends Controller
         throw new Exception('El campo nombre es requerido.');
       }
 
-      if (!preg_match('/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ]+$/', $nombre)) {
-        throw new Exception('El nombre solo puede contener letras, números y espacios.');
-      }
+      if (!preg_match('/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ\-]+$/', $nombre)) {
+        throw new Exception('El nombre solo puede contener letras, números, espacios y guiones.');
+    }
+    
 
       if (strlen($nombre) < 4 || strlen($nombre) > 50) {
         throw new Exception('El nombre debe tener entre 3 y 50 caracteres.');
@@ -243,6 +244,41 @@ class gruposController extends Controller
   }
   function borrar($id)
   {
-    // Proceso de borrado
+
+    try {
+      if (!check_get_data(['_t'], $_GET) || !Csrf::validate($_GET['_t'])) {
+        throw new Exception(get_notificaciones(0));
+      }
+
+      //Validar rol
+      if (!is_admin(get_user_role())) {
+        throw new Exception(get_notificaciones(1));
+      }
+
+      // Validar que el grupo exista
+      if (!$grupo = grupoModel::by_id($id)) {
+        throw new Exception('No existe el grupo en la base de datos.');
+      }
+
+      //Borramos el registro y sus conexiones
+      if (grupoModel::eliminar($grupo['id']) === false) {
+        throw new Exception(get_notificaciones(4));
+    }
+    
+      //Borrar la imagen del Horario
+      if (is_file(UPLOADS.$grupo['horario'])){
+        unlink(UPLOADS.$grupo['horario']);
+      }
+
+    Flasher::new(sprintf('Grupo <b>%s</b> borrado con éxito.', $grupo['nombre']), 'success');
+    Redirect::to('grupos');
+
+    } catch (PDOException $e) {
+      Flasher::new($e->getMessage(), 'danger');
+      Redirect::back();
+    } catch (Exception $e) {
+      Flasher::new($e->getMessage(), 'danger');
+      Redirect::back();
+    }
   }
 }
