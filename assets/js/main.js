@@ -937,7 +937,7 @@ $(document).ready(function () {
       });
   }
 
-  //Suspender alumno de grupo
+  //Suspender alumno
   $("body").on("click", ".suspender_alumno", suspender_alumno);
   function suspender_alumno(e) {
     e.preventDefault();
@@ -945,6 +945,7 @@ $(document).ready(function () {
     // Recuperar los datos necesarios
     var btn = $(this),
       csrf = Bee.csrf,
+      view = btn.data('view');
       id_alumno = btn.data("id"),
       action = "put",
       hook = "bee_hook";
@@ -972,6 +973,12 @@ $(document).ready(function () {
         // Manejar la respuesta exitosa
         if (res.status === 200) {
           toastr.success(res.msg, "¡Bien!");
+          
+          if (view === 'alumnos') {
+            window.location.reload();
+            return false;
+          } 
+          
           get_alumnos_grupo();
         } else {
           toastr.error(res.msg, "¡Upss!");
@@ -994,6 +1001,7 @@ $(document).ready(function () {
     // Recuperar los datos necesarios
     var btn     = $(this),
       csrf      = Bee.csrf,
+      view      = btn.data("view");
       id_alumno = btn.data("id"),
       action    = "put",
       hook      = "bee_hook";
@@ -1021,7 +1029,14 @@ $(document).ready(function () {
         // Manejar la respuesta exitosa
         if (res.status === 200) {
           toastr.success(res.msg, "¡Bien!");
+
+          if (view === 'alumnos') {
+            window.location.reload();
+            return false;
+          }
           get_alumnos_grupo();
+
+
         } else {
           toastr.error(res.msg, "¡Upss!");
         }

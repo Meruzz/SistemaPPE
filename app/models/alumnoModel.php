@@ -24,11 +24,31 @@ class alumnoModel extends Model {
     return ($rows = parent::query($sql)) ? $rows : [];
   }
 
+  static function all_paginated()
+  {
+    // Todos los registros
+    $sql = 'SELECT * FROM usuarios WHERE rol = "alumno" ORDER BY id DESC';
+    return PaginationHandler::paginate($sql);
+  }
+
   static function by_id($id)
   {
     // Un registro con $id
     $sql = 'SELECT * FROM usuarios WHERE id = :id AND rol="alumno" LIMIT 1';
     return ($rows = parent::query($sql, ['id' => $id])) ? $rows[0] : [];
+  }
+
+  /**
+     * Verifica si el correo electrónico ya está registrado en la base de datos.
+     *
+     * @param string $email El correo electrónico a verificar.
+     * @return bool Verdadero si el correo ya existe, falso si no.
+     */
+    static function emailExists($email) {
+      $sql = 'SELECT COUNT(*) FROM ' . self::$t1 . ' WHERE email = :email';
+      $params = ['email' => $email];
+      $rows = parent::query($sql, $params);
+      return $rows[0] > 0;  // Asume que query devuelve un array con el COUNT en la primera posición
   }
 
   static function suspender($id)

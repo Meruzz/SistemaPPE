@@ -87,7 +87,7 @@
                         <div class="form-group">
                             <label for="id_mp">Selecciona una opción disponible:</label>
                             <select name="id_mp" id="id_mp" class="form-select" require>
-                                <option value="">Una impartida por Alex</option>
+                                
                             </select>
                         </div>
 
