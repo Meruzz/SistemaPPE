@@ -200,13 +200,17 @@ class loginController extends Controller
       $conf_password = clean($_POST["conf_password"]);
 
       //Validar que exista dicho token en la base de datos
-      $sql = 'SELECT u.* 
+      $sql = 'SELECT u.*,
+      p.id AS id_post
       FROM usuarios u 
       JOIN posts p ON p.id_usuario = u.id AND p.tipo = "token_recuperacion"
       WHERE u.id = :id AND p.contenido =:token';
-      if (!usuarioModel::query($sql, ['id' => $id, 'token' => $token])) {
+
+      if (!$posts = usuarioModel::query($sql, ['id' => $id, 'token' => $token])) {
         throw new Exception(get_notificaciones(0));
       }
+
+      $post = $posts[0];
 
       //Verificar las contraseñas
       if (strlen($password) < 8) {
@@ -232,6 +236,10 @@ class loginController extends Controller
       $body    = sprintf('Tu contraseña ha sido actualizada con éxito.');
       send_email(get_siteemail(), $usuario['email'], 'Tu contraseña ha sido actualizada.', $body, 'Se han realizado cambios en tu contraseña.');
 
+      //borramos el registro del token / post
+      postModel::remove(postModel::$t1, ['id' => $post['id_post']]);
+
+
       Flasher::new(sprintf('Tu contraseña ha sido actualizada con éxito.'), 'success');
       Redirect::to('login');
     } catch (Exception $e) {
@@ -242,4 +250,5 @@ class loginController extends Controller
       Redirect::to('login');
     }
   }
+
 }

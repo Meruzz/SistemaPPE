@@ -583,6 +583,9 @@ class ajaxController extends Controller
         throw new Exception(get_notificaciones(4));
       }
 
+      //Email de suspensión
+      mail_suspension_cuenta($id_alumno);
+
       $msg = sprintf('El alumno <b>%s</b> ha sido suspendido con éxito.', $alumno['nombre_completo']);
 
       json_output(json_build(200, $alumno, $msg));
@@ -619,6 +622,8 @@ class ajaxController extends Controller
       if (alumnoModel::remover_suspension($id_alumno) === false) {
         throw new Exception(get_notificaciones(4));
       }
+      //email de remover suspensión
+       mail_retirar_suspension_cuenta($id_alumno);
 
       $msg = sprintf('Se retiro la suspensión del alumno <b>%s</b> con éxito.', $alumno['nombre_completo']);
       $alumno = alumnoModel::by_id($id_alumno);

@@ -181,3 +181,61 @@ function mail_recuperacion_contrasena($id_usuario)
   if (!send_email(get_siteemail(), $email, $subject, $body, $alt) !== true) return false;
   return true;
 }
+
+/**
+   * Enviar email de suspensión de cuenta
+   *
+   * @param integer $id_usuario
+   * @return bool
+   */
+  function mail_suspension_cuenta($id_usuario)
+  {
+    $usuario = usuarioModel::by_id($id_usuario);
+
+    if (empty($usuario)) return false;
+
+    $nombre = $usuario['nombre_completo'];
+    $email  = $usuario['email'];
+    $status = $usuario['status'];
+
+    if ($status !== 'suspendido') return false;
+
+    $subject = sprintf('%s tu cuenta ha sido suspendida', $nombre);
+    $alt     = sprintf('Regulariza tu situación en %s para poder ingresar.', get_sitename());
+    $text    = "Hola %s<br>Te informamos que tu cuenta ha sido suspendida, regulariza tu situación para poder ingresar de nuevo a <b>%s</b>.";
+    $body    = sprintf($text, $nombre, get_sitename());
+
+    // Creando el correo electrónico
+    if (send_email(get_siteemail(), $email, $subject, $body, $alt) !== true) return false;
+
+    return true;
+  }
+
+  /**
+   * Enviar email de retiro de suspensión
+   *
+   * @param integer $id_usuario
+   * @return bool
+   */
+  function mail_retirar_suspension_cuenta($id_usuario)
+  {
+    $usuario = usuarioModel::by_id($id_usuario);
+
+    if (empty($usuario)) return false;
+
+    $nombre = $usuario['nombre_completo'];
+    $email  = $usuario['email'];
+    $status = $usuario['status'];
+
+    if ($status === 'suspendido') return false;
+
+    $subject = sprintf('%s suspensión retirada de tu cuenta', $nombre);
+    $alt     = sprintf('Puedes ingresar de nuevo a %s.', get_sitename());
+    $text    = "Hola %s<br>Te informamos que tu cuenta ha sido habilitada de nuevo, ya puedes ingresar a <b>%s</b>.";
+    $body    = sprintf($text, $nombre, get_sitename());
+
+    // Creando el correo electrónico
+    if (send_email(get_siteemail(), $email, $subject, $body, $alt) !== true) return false;
+
+    return true;
+  }
