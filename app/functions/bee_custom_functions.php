@@ -134,7 +134,7 @@ function mail_confirmar_cuenta($id_usuario)
 
   $subject = sprintf('Confirma tu correo electrónico por favor %s.', $nombre);
   $alt     = sprintf('Debes confirmar tu correo electrónico para poder ingresar a %s.', get_sitename());
-  $url     = buildURL(URL.'login/activate', ['email' => $email, 'hash' => $hash], false, false);
+  $url     = buildURL(URL . 'login/activate', ['email' => $email, 'hash' => $hash], false, false);
   $text    = '¡Hola %s!<br>Para ingresar al sistema de <b>%s</b> primero debes confirmar tu dirección de correo electrónico dando clic en el siguiente enlace seguro: 
     <a href="%s">%s</a>';
 
@@ -142,5 +142,42 @@ function mail_confirmar_cuenta($id_usuario)
 
   if (send_email(get_siteemail(), $email, $subject, $body, $alt) !== true) return false;
 
+  return true;
+}
+
+function mail_recuperacion_contrasena($id_usuario)
+{
+  $usuario = usuarioModel::by_id($id_usuario);
+
+  if (empty($usuario)) return false;
+
+  // Array para nuevo token
+  $email   = $usuario['email'];
+  $nombre  = $usuario['nombre_completo'];
+  $token   = generate_token();
+  $url     = buildURL(URL.'login/password', ['id' => $id_usuario, 'token' => $token], false, false);
+  $post    = 
+  [
+    'tipo'       => 'token_recuperacion',
+    'id_ref'     => 0,
+    'id_usuario' => $id_usuario,
+    'titulo'     => 'Token de recuperación de contraseña',
+    'contenido'  => $token,
+    'permalink'  => $url,
+    'creado'     => now()
+  ];
+
+  // Agregando el post / token a la base de datos
+  if (!$id_post = postModel::add(postModel::$t1, $post)) {
+    return false;
+  }
+
+  $subject = sprintf('Recuperación de contraseña para %s', $nombre);
+  $alt    = 'Ingresa para realizar el cambio de contraseña para tu cuenta.';
+  $text    = '¡Hola %s!<br>Para actualizar tu contraseña ingresa al siguiente enlace: <a href="%s">%s</a>';
+  $body    = sprintf($text, $nombre, $url, $url);
+
+  // Creando el correo electrónico
+  if (!send_email(get_siteemail(), $email, $subject, $body, $alt) !== true) return false;
   return true;
 }
