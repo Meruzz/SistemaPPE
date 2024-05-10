@@ -60,5 +60,17 @@ class alumnoModel extends Model {
   {
     return (parent::update(self::$t1, ['id' => $id], ['status'=> 'activo']) !== false) ? true : false;
   }
+
+  static function eliminar($id)
+{
+  $sql = 'DELETE 
+  u, 
+  ga 
+  FROM usuarios u 
+  JOIN grupos_alumnos ga ON ga.id_alumno = u.id 
+  WHERE u.id = :id AND u.rol = "alumno"';
+  return(parent::query($sql, ['id'=>$id]))?true:false;
+}
+
 }
 
