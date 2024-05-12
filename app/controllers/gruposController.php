@@ -56,18 +56,6 @@ class gruposController extends Controller
     View::render('ver', $data);
   }
 
-  function asignados()
-  {
-
-    $data = [
-      'title'    => 'Grupos Asignados',
-      'slug'     => 'grupos',
-      'grupos'   => profesorModel::grupos_asignados(get_user('id')),
-    ];
-
-    View::render('asignados', $data);
-  }
-
   function agregar()
   {
 
@@ -296,5 +284,48 @@ class gruposController extends Controller
       Flasher::new($e->getMessage(), 'danger');
       Redirect::back();
     }
+  }
+
+  //Para profesores
+  function asignados()
+  {
+
+    $data = [
+      'title'    => 'Grupos Asignados',
+      'slug'     => 'grupos',
+      'grupos'   => profesorModel::grupos_asignados(get_user('id')),
+    ];
+
+    View::render('asignados', $data);
+  }
+
+  function detalles($id)
+  {
+    if (!is_profesor(get_user_role())){
+      Flasher::new(get_notificaciones(), 'danger');
+      Redirect::back();
+    }
+
+    if (!$grupo = grupoModel::by_id($id)) {
+      Flasher::new('No existe el grupo en la base de datos.', 'danger');
+      Redirect::back();
+    }
+
+    $grupo['materias'] = grupoModel::materias_asignadas($id);
+    $grupo['alumnos']  = grupoModel::alumnos_asignados($id);
+
+    if (!profesorModel::asignado_a_grupo(get_user('id'), $id)) {
+      Flasher::new ('No estas asignado a este grupo.', 'danger');
+      Redirect::to('grupos/asignados');
+    }
+
+    $data = [
+      'title'        => sprintf('Grupo %s', $grupo['nombre']),
+      'slug'         => 'grupos',
+      'button'       => ['url' => 'grupos/asignados', 'text' => '<i class="fas fa-table"></i> Todos mis grupos'],
+      'g'            => $grupo,
+    ];
+
+    View::render('detalles', $data);
   }
 }

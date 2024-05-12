@@ -94,10 +94,10 @@ class alumnosController extends Controller
         throw new Exception('Ingresa un correo electrónico válido.');
       }
 
-      // Verificar si el correo electrónico ya existe
+/*       // Verificar si el correo electrónico ya existe
       if (alumnoModel::emailExists($email)) {
         throw new Exception('Este correo electrónico ya está registrado. Por favor, usa otro.');
-      }
+      } */
 
       //validaciones de nombre
       if (empty($nombres)) {
@@ -272,18 +272,18 @@ class alumnosController extends Controller
         throw new Exception('El apellidos debe tener entre 3 y 50 caracteres.');
       }
 
-      //Validación de teléfono
+/*       //Validación de teléfono
       if (empty($telefono)) {
         throw new Exception('El campo teléfono es requerido.');
-      }
+      } */
 
-      if (!preg_match('/^\+?[0-9\s\-()]+$/', $telefono)) {
+/*       if (!preg_match('/^\+?[0-9\s\-()]+$/', $telefono)) {
         throw new Exception('El teléfono solo puede contener números, espacios, y caracteres de (+,-,(),).');
-      }
+      } */
 
-      if (strlen($telefono) < 7 || strlen($telefono) > 20) {
+/*       if (strlen($telefono) < 7 || strlen($telefono) > 20) {
         throw new Exception('El teléfono debe tener entre 7 y 20 caracteres.');
-      }
+      } */
 
       // Validar que el correo sea válido
       if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -291,9 +291,9 @@ class alumnosController extends Controller
       }
 
       // Verificar si el correo electrónico ya existe
-      if (alumnoModel::emailExists($email)) {
+/*       if (alumnoModel::emailExists($email)) {
         throw new Exception('Este correo electrónico ya está registrado. Por favor, usa otro.');
-      }
+      } */
 
       //Validación de contraseña
       $pw_ok = password_verify($db_pw, $password . AUTH_SALT);
@@ -301,9 +301,9 @@ class alumnosController extends Controller
         throw new Exception('La contraseña debe tener al menos 8 caracteres.');
       }
 
-      if (!preg_match('/[A-Za-z]/', $password) || !preg_match('/[0-9]/', $password)) {
+/*       if (!preg_match('/[A-Za-z]/', $password) || !preg_match('/[0-9]/', $password)) {
         throw new Exception('La contraseña debe contener al menos una letra y un número.');
-      }
+      } */
 
       if (!empty($password) && $pw_ok === false &&  $password !== $conf_password) {
         throw new Exception('Las contraseñas no coinciden.');

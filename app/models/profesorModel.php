@@ -138,5 +138,17 @@ class profesorModel extends Model
     return PaginationHandler::paginate($sql, ['id' => $id_profesor]);
   }
 
+  static function asignado_a_grupo($id_profesor, $id_grupo)
+  {
+    $sql =
+      'SELECT DISTINCT g.*
+      FROM 
+        grupos g
+      JOIN grupos_materias gm ON gm.id_grupo = g.id
+      JOIN materias_profesores mp ON mp.id = gm.id_mp
+      WHERE mp.id_profesor = :id_profesor AND g.id = :id_grupo';
+    return parent::query($sql, ['id_profesor'=>$id_profesor,'id_grupo'=> $id_grupo])?true:false;
+  }
+
 
 }
