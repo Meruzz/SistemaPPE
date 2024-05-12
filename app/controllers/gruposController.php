@@ -36,7 +36,7 @@ class gruposController extends Controller
 
   function ver($id)
   {
-    if (!is_admin(get_user_role())){
+    if (!is_admin(get_user_role())) {
       Flasher::new(get_notificaciones(), 'danger');
       Redirect::back();
     }
@@ -166,8 +166,8 @@ class gruposController extends Controller
 
       if (!preg_match('/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ\-]+$/', $nombre)) {
         throw new Exception('El nombre solo puede contener letras, números, espacios y guiones.');
-    }
-    
+      }
+
 
       if (strlen($nombre) < 4 || strlen($nombre) > 50) {
         throw new Exception('El nombre debe tener entre 3 y 50 caracteres.');
@@ -267,16 +267,15 @@ class gruposController extends Controller
       //Borramos el registro y sus conexiones
       if (grupoModel::eliminar($grupo['id']) === false) {
         throw new Exception(get_notificaciones(4));
-    }
-    
-      //Borrar la imagen del Horario
-      if (is_file(UPLOADS.$grupo['horario'])){
-        unlink(UPLOADS.$grupo['horario']);
       }
 
-    Flasher::new(sprintf('Grupo <b>%s</b> borrado con éxito.', $grupo['nombre']), 'success');
-    Redirect::to('grupos');
+      //Borrar la imagen del Horario
+      if (is_file(UPLOADS . $grupo['horario'])) {
+        unlink(UPLOADS . $grupo['horario']);
+      }
 
+      Flasher::new(sprintf('Grupo <b>%s</b> borrado con éxito.', $grupo['nombre']), 'success');
+      Redirect::to('grupos');
     } catch (PDOException $e) {
       Flasher::new($e->getMessage(), 'danger');
       Redirect::back();
@@ -301,7 +300,7 @@ class gruposController extends Controller
 
   function detalles($id)
   {
-    if (!is_profesor(get_user_role())){
+    if (!is_profesor(get_user_role())) {
       Flasher::new(get_notificaciones(), 'danger');
       Redirect::back();
     }
@@ -315,7 +314,7 @@ class gruposController extends Controller
     $grupo['alumnos']  = grupoModel::alumnos_asignados($id);
 
     if (!profesorModel::asignado_a_grupo(get_user('id'), $id)) {
-      Flasher::new ('No estas asignado a este grupo.', 'danger');
+      Flasher::new('No estas asignado a este grupo.', 'danger');
       Redirect::to('grupos/asignados');
     }
 
@@ -327,5 +326,27 @@ class gruposController extends Controller
     ];
 
     View::render('detalles', $data);
+  }
+
+  function materia($id)
+  {
+    if (!is_profesor(get_user_role())) {
+      Flasher::new(get_notificaciones(), 'danger');
+      Redirect::back();
+    }
+
+    if (!$materia = materiaModel::by_id($id)) {
+      Flasher::new('No existe la materia en la base de datos.', 'danger');
+      Redirect::to('materias');
+    }
+
+    $data = [
+      'title'     => sprintf('Lecciones disponibles para %s', $materia['nombre']),
+      'slug'      => 'grupos',
+      'button'    => ['url' => 'grupos/asignados', 'text' => '<i class="fas fa-table"></i> Todos mis grupos'],
+      'lecciones' => leccionModel::by_materia_profesor($id, get_user('id'))
+    ];
+
+    View::render('materia', $data);
   }
 }
