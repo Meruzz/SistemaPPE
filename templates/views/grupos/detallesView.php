@@ -75,41 +75,40 @@
         </div>
     </div>
 
-    <!-- Card de materias-profesores -->
-    <div class="col-xl-4 col-md-6 col-12">
-        <!-- Collapsable Card Example -->
-        <div class="card shadow mb-4">
-            <!-- Card Header - Accordion -->
-            <a href="#grupo_materias" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="grupo_materias">
-                <h6 class="m-0 font-weight-bold text-primary">Materias y Profesores</h6>
-            </a>
-            <!-- Card Content - Collapse -->
-            <div class="collapse show" id="grupo_materias">
-                <div class="card-body">
-                    <?php if (!empty($d->g->materias)) : ?>
-                        <ul class="list-group">
-                            <?php foreach ($d->g->materias as $m) : ?>
-                                <li class="list-group-item">
-                                    <a href="<?php echo sprintf('grupos/materia/%s', $m->id_materia); ?>"><b><?php echo $m->materia; ?></a>
-
-                                    <div class="btn-group">
-                                        <a class="btn btn-success btn-sm" href="<?php echo buildURL('lecciones/agregar/%s', ['id_materia' => $m->id_materia], false, false ); ?>"><i class="fas fa-plus"></i></a>
-                                        <a class="btn btn-success btn-sm" href="<?php echo sprintf('grupos/materia/%s', $m->id_materia); ?>"><i class="fas fa-eye"></i></a>
-                                    </div>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php else : ?>
-                        <div class="text-center py-5">
-                            <img src="<?php echo get_image('undraw_no_data.svg'); ?>" alt="No hay registros." class="img-fluid" style="width: 200px;">
-                            <p class="text-muted">No hay materias asignadas.</p>
-                        </div>
-                    <?php endif; ?>
-
-                </div>
+<!-- Card de materias-profesores -->
+<div class="col-xl-4 col-md-6 col-12">
+    <!-- Collapsable Card Example -->
+    <div class="card shadow mb-4">
+        <!-- Card Header - Accordion -->
+        <a href="#grupo_materias" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="grupo_materias">
+            <h6 class="m-0 font-weight-bold text-primary">Materias y Profesores</h6>
+        </a>
+        <!-- Card Content - Collapse -->
+        <div class="collapse show" id="grupo_materias">
+            <div class="card-body">
+                <?php if (!empty($d->g->materias)) : ?>
+                    <ul class="list-group">
+                        <?php foreach ($d->g->materias as $m) : ?>
+                            <li class="list-group-item">
+                                <a href="<?php echo sprintf('grupos/materia/%s', $m->id_materia); ?>"><b><?php echo $m->materia; ?></b></a>
+                                <div class="btn-group float-right">
+                                    <a class="btn btn-primary btn-sm" href="<?php echo buildURL('lecciones/agregar/', ['id_materia' => $m->id_materia], false, false); ?>"><i class="fas fa-plus"></i></a>
+                                    <a class="btn btn-success btn-sm" href="<?php echo sprintf('grupos/materia/%s', $m->id_materia); ?>"><i class="fas fa-eye"></i></a>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else : ?>
+                    <div class="text-center py-5">
+                        <img src="<?php echo get_image('undraw_no_data.svg'); ?>" alt="No hay registros." class="img-fluid" style="width: 200px;">
+                        <p class="text-muted">No hay materias asignadas.</p>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
+</div>
+
 
 </div>
 

@@ -239,3 +239,13 @@ function mail_recuperacion_contrasena($id_usuario)
 
     return true;
   }
+
+
+  function get_estados_lecciones()
+  {
+    return 
+    [
+      ['borrador', 'Borrador'],
+      ['publica', 'Publicada']
+    ];
+  }

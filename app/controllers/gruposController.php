@@ -56,8 +56,13 @@ class gruposController extends Controller
     View::render('ver', $data);
   }
 
-  function agregar()
+  function agregar($id)
   {
+
+    if (!is_profesor(get_user_role())) {
+      Flasher::new(get_notificaciones(), 'danger');
+      Redirect::back('dashboard');
+    }
 
     $data =
       [
