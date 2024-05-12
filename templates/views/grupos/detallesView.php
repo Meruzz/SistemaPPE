@@ -86,24 +86,26 @@
             <!-- Card Content - Collapse -->
             <div class="collapse show" id="grupo_materias">
                 <div class="card-body">
+                    <?php if (!empty($d->g->materias)) : ?>
+                        <ul class="list-group">
+                            <?php foreach ($d->g->materias as $m) : ?>
+                                <li class="list-group-item">
+                                    <a href="<?php echo sprintf('grupos/materia/%s', $m->id_materia); ?>"><b><?php echo $m->materia; ?></a>
 
-                    <form id="grupo_asignar_materia_form" method="post">
-
-                        <?php echo insert_inputs(); ?>
-                        <input type="hidden" name="id_grupo" value="<?php echo $d->g->id; ?>" required>
-
-                        <div class="form-group">
-                            <label for="id_mp">Selecciona una opción disponible:</label>
-                            <select name="id_mp" id="id_mp" class="form-select" require>
-
-                            </select>
+                                    <div class="btn-group">
+                                        <a class="btn btn-success btn-sm" href="<?php echo buildURL('lecciones/agregar/%s', ['id_materia' => $m->id_materia], false, false ); ?>"><i class="fas fa-plus"></i></a>
+                                        <a class="btn btn-success btn-sm" href="<?php echo sprintf('grupos/materia/%s', $m->id_materia); ?>"><i class="fas fa-eye"></i></a>
+                                    </div>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else : ?>
+                        <div class="text-center py-5">
+                            <img src="<?php echo get_image('undraw_no_data.svg'); ?>" alt="No hay registros." class="img-fluid" style="width: 200px;">
+                            <p class="text-muted">No hay materias asignadas.</p>
                         </div>
+                    <?php endif; ?>
 
-                        <button class="btn btn-success" type="submit">Agregar</button>
-
-                    </form>
-                    <hr>
-                    <div class="wrapper_materias_grupo" data-id="<?php echo $d->g->id; ?>"><!-- Agregar con ajax a la lista de materias --></div>
                 </div>
             </div>
         </div>

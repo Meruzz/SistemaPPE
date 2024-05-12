@@ -47,7 +47,7 @@ class grupoModel extends Model
             'SELECT 
             mp.id,
             m.nombre AS materia,
-            u.nombres AS profesor
+            u.nombre_completo AS profesor
         FROM
             materias_profesores mp
         LEFT JOIN materias m ON m.id = mp.id_materia
@@ -65,16 +65,18 @@ class grupoModel extends Model
         return ($rows = parent::query($sql, ['id_grupo' => $id])) ? $rows : [];
     }
 
-    static function materias_asignadas($id)
+    static function materias_asignadas($id, $id_profesor = null)
     {
-        $sql =
-            'SELECT 
+        //Cargar las materias sin importar el profesor
+        if ($id_profesor === null) {
+            $sql =
+                'SELECT 
             mp.id,
             m.id AS id_materia,
             m.nombre AS materia,
             u.id AS id_profesor,
             u.numero AS num_profesor,
-            u.nombres AS profesor
+            u.nombre_completo AS profesor
         FROM
             materias_profesores mp
         LEFT JOIN materias m ON m.id = mp.id_materia
@@ -89,7 +91,31 @@ class grupoModel extends Model
                     gm.id_grupo = :id_grupo
             )';
 
-        return ($rows = parent::query($sql, ['id_grupo' => $id])) ? $rows : [];
+            return ($rows = parent::query($sql, ['id_grupo' => $id])) ? $rows : [];
+        }
+
+        $sql =
+            'SELECT 
+            mp.id,
+            m.id AS id_materia,
+            m.nombre AS materia,
+            u.id AS id_profesor,
+            u.numero AS num_profesor,
+            u.nombre_completo AS profesor
+        FROM
+            materias_profesores mp
+        LEFT JOIN materias m ON m.id = mp.id_materia
+        LEFT JOIN usuarios u ON u.id = mp.id_profesor
+        WHERE
+            mp.id IN (
+                SELECT
+                    gm.id_mp
+                FROM
+                    grupos_materias gm
+                WHERE
+                    gm.id_grupo = :id_grupo
+            ) AND mp.id_profesor = :id_profesor';
+        return ($rows = parent::query($sql, ['id_grupo' => $id, 'id_profesor' => $id_profesor])) ? $rows : [];
     }
 
     static function asignar_materia($id_grupo, $id_mp)
@@ -143,11 +169,11 @@ class grupoModel extends Model
 
     static function eliminar($id_grupo)
     {
-        $sql = 
-        'DELETE g, gm, ga 
+        $sql =
+            'DELETE g, gm, ga 
         FROM grupos g 
-        JOIN grupos_materias gm ON g.id = gm.id_grupo
-        JOIN grupos_alumnos ga ON g.id = ga.id_grupo
+        LEFT JOIN grupos_materias gm ON g.id = gm.id_grupo
+        LEFT JOIN grupos_alumnos ga ON g.id = ga.id_grupo
         WHERE g.id = :id';
         return (parent::query($sql, ['id' => $id_grupo])) ? true : false;
     }

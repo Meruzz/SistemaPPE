@@ -311,7 +311,7 @@ class gruposController extends Controller
       Redirect::back();
     }
 
-    $grupo['materias'] = grupoModel::materias_asignadas($id);
+    $grupo['materias'] = grupoModel::materias_asignadas($id, get_user('id'));
     $grupo['alumnos']  = grupoModel::alumnos_asignados($id);
 
     if (!profesorModel::asignado_a_grupo(get_user('id'), $id)) {

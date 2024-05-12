@@ -94,9 +94,10 @@ class alumnosController extends Controller
         throw new Exception('Ingresa un correo electrónico válido.');
       }
 
-/*       // Verificar si el correo electrónico ya existe
-      if (alumnoModel::emailExists($email)) {
-        throw new Exception('Este correo electrónico ya está registrado. Por favor, usa otro.');
+      // Verificar si el correo electrónico ya existe en al base de datos
+/*       $sql= 'SELECT * FROM usuarios WHERE email = :email AND id != :id LIMIT 1';
+      if(usuarioModel::query($sql, ['email'=> $email, 'id'=>$id])){
+        throw new Exception('El correo electrónico ya existe en la base de datos.');
       } */
 
       //validaciones de nombre
@@ -207,11 +208,6 @@ class alumnosController extends Controller
     }
   }
 
-  function editar($id)
-  {
-    View::render('editar');
-  }
-
   function post_editar()
   {
     try {
@@ -269,7 +265,7 @@ class alumnosController extends Controller
       }
 
       if (strlen($apellidos) < 4 || strlen($apellidos) > 50) {
-        throw new Exception('El apellidos debe tener entre 3 y 50 caracteres.');
+        throw new Exception('El apellido debe tener entre 3 y 50 caracteres.');
       }
 
 /*       //Validación de teléfono
@@ -286,13 +282,14 @@ class alumnosController extends Controller
       } */
 
       // Validar que el correo sea válido
-      if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      if (!$changed_email && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         throw new Exception('Ingresa un correo electrónico válido.');
       }
 
-      // Verificar si el correo electrónico ya existe
-/*       if (alumnoModel::emailExists($email)) {
-        throw new Exception('Este correo electrónico ya está registrado. Por favor, usa otro.');
+      // Verificar si el correo electrónico ya existe en al base de datos
+/*       $sql= 'SELECT * FROM usuarios WHERE email = :email AND id != :id LIMIT 1';
+      if(usuarioModel::query($sql, ['email'=> $email, 'id'=>$id])){
+        throw new Exception('El correo electrónico ya existe en la base de datos.');
       } */
 
       //Validación de contraseña
@@ -305,6 +302,7 @@ class alumnosController extends Controller
         throw new Exception('La contraseña debe contener al menos una letra y un número.');
       } */
 
+      //Validar ambas contraseñas
       if (!empty($password) && $pw_ok === false &&  $password !== $conf_password) {
         throw new Exception('Las contraseñas no coinciden.');
       }
@@ -335,6 +333,7 @@ class alumnosController extends Controller
         throw new Exception(get_notificaciones(2));
       }
 
+      //Actualizar la base de datos
       if ($changed_g) {
         if (!grupoModel::update(grupoModel::$t3, ['id_alumno' => $id], ['id_grupo' => $id_grupo])) {
           throw new Exception(get_notificaciones(2));
@@ -342,14 +341,14 @@ class alumnosController extends Controller
       }
 
       $alumno = alumnoModel::by_id($id);
-      $grupo = grupoModel::by_id($id_grupo);
+      $grupo  = grupoModel::by_id($id_grupo);
 
 
       Flasher::new(sprintf('Alumno <b>%s</b> actualizado con éxito.', $alumno['nombre_completo']), 'success');
 
       if ($changed_email) {
         mail_confirmar_cuenta($id);
-        Flasher::new(sprintf('Se ha enviado un correo electrónico a <b>%s</b> para confirmar el cambio de correo electrónico.', $email), 'info');
+        Flasher::new(sprintf('Se ha enviado un correo electrónico para confirmar el cambio de correo electrónico.'), 'info');
       }
 
       if ($changed_pw) {
