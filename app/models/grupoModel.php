@@ -97,7 +97,7 @@ class grupoModel extends Model
         $data =
             [
                 'id_grupo' => $id_grupo,
-                'id_mp' => $id_mp,
+                'id_mp'    => $id_mp,
             ];
         if (!$id = self::add(self::$t2, $data)) return false;
         return $id;
@@ -108,7 +108,7 @@ class grupoModel extends Model
         $data =
             [
                 'id_grupo' => $id_grupo,
-                'id_mp' => $id_mp,
+                'id_mp'    => $id_mp,
             ];
 
         return (self::remove(self::$t2, $data)) ? true : false;

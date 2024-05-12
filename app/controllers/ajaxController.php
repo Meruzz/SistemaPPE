@@ -430,8 +430,9 @@ class ajaxController extends Controller
         throw new Exception(get_notificaciones(0));
       }
 
-      $id_mp = clean($_POST['id_mp']);
       $id_grupo = clean($_POST['id_grupo']);
+      $id_mp    = clean($_POST['id_mp']);
+      
 
       if (!$grupo = grupoModel::by_id($id_grupo)) {
         throw new Exception('No existe el grupo en la base de datos.');
@@ -451,7 +452,7 @@ class ajaxController extends Controller
         throw new Exception(get_notificaciones(2));
       }
 
-      $msg = sprintf('Nueva materia asignada con éxito.', $grupo['nombre']);
+      $msg = sprintf('Nueva materia asignada con éxito al grupo <b>%s</b>.', $grupo['nombre']);
 
       json_output(json_build(201, $grupo, $msg));
     } catch (Exception $e) {
@@ -468,8 +469,9 @@ class ajaxController extends Controller
         throw new Exception(get_notificaciones());
       }
 
-      $id_mp = clean($_POST["id_mp"]);
       $id_grupo = clean($_POST["id_grupo"]);
+      $id_mp    = clean($_POST["id_mp"]);
+      
 
       if (!$grupo = grupoModel::by_id($id_grupo)) {
         throw new Exception('No existe el grupo en la base de datos.');

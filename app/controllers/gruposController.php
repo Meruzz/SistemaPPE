@@ -36,6 +36,11 @@ class gruposController extends Controller
 
   function ver($id)
   {
+    if (!is_admin(get_user_role())){
+      Flasher::new(get_notificaciones(), 'danger');
+      Redirect::back();
+    }
+
     if (!$grupo = grupoModel::by_id($id)) {
       Flasher::new('No existe el grupo en la base de datos.', 'danger');
       Redirect::back();
@@ -51,6 +56,17 @@ class gruposController extends Controller
     View::render('ver', $data);
   }
 
+  function asignados()
+  {
+
+    $data = [
+      'title'    => 'Grupos Asignados',
+      'slug'     => 'grupos',
+      'grupos'   => profesorModel::grupos_asignados(get_user('id')),
+    ];
+
+    View::render('asignados', $data);
+  }
 
   function agregar()
   {
