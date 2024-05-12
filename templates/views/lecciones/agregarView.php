@@ -18,7 +18,7 @@
                         <?php if (!empty($d->materias_profesor)) : ?>
                             <div class="form-group">
                                 <label for="id_materia">Materia</label>
-                                <select name="id_materia" id="id_materia" class="form-control">
+                                <select name="id_materia" id="id_materia" class="form-select">
                                     <?php foreach ($d->materias_profesor as $m) : ?>
                                         <?php echo sprintf('<option value="%s" %s>%s</option>', $m->id, $d->id_materia == $m->id ? 'selected' : null, $m->nombre); ?>
                                     <?php endforeach; ?>
@@ -32,8 +32,8 @@
                         <?php endif; ?>
 
                         <div class="form-group">
-                            <label for="nombre">Título de la lección</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                            <label for="titulo">Título de la lección</label>
+                            <input type="text" class="form-control" id="titulo" name="titulo" required>
                         </div>
 
                         <div class="form-group">
@@ -48,7 +48,7 @@
 
                         <div class="form-group">
                             <label for="status">Estado de la Lección</label>
-                            <select name="status" id="status" class="form-control">
+                            <select name="status" id="status" class="form-select">
                                 <?php foreach (get_estados_lecciones() as $e) : ?>
                                     <?php echo sprintf('<option value="%s">%s</option>', $e[0], $e[1]); ?>
                                 <?php endforeach; ?>
