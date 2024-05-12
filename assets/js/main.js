@@ -737,16 +737,15 @@ $(document).ready(function () {
 
   $("#grupo_asignar_materia_form").on("submit", add_materia_grupo);
   function add_materia_grupo(e) {
-    id_alumno;
     e.preventDefault();
 
-    var form = $("#grupo_asignar_materia_form"),
-      select = $("select", form),
-      id_mp = select.val(),
-      id_grupo = $('input[name="id_grupo"]', form).val(),
-      csrf = $('input[name="csrf"]', form).val(),
-      action = "post",
-      hook = "bee_hook";
+    var form    = $("#grupo_asignar_materia_form"),
+      select    = $("select", form),
+      id_mp     = select.val(),
+      id_grupo  = $('input[name="id_grupo"]', form).val(),
+      csrf      = $('input[name="csrf"]', form).val(),
+      action    = "post",
+      hook      = "bee_hook";
 
     if (id_mp === undefined || id_mp === "") {
       toastr.error("Selecciona una materia válida.");
