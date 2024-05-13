@@ -33,7 +33,7 @@ class dashboardController extends Controller
       $data['stats'] = profesorModel::stats_by_id(get_user('id'));
       View::render('dashboard_profesor', $data);
     } else if (is_alumno($rol)) {
-
+      View::render('dashboard_alumno', $data);
     } else {
 
     }
