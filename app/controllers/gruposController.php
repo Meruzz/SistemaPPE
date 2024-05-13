@@ -349,6 +349,7 @@ class gruposController extends Controller
       'title'     => sprintf('Lecciones disponibles para %s', $materia['nombre']),
       'slug'      => 'grupos',
       'button'    => ['url' => 'grupos/asignados', 'text' => '<i class="fas fa-table"></i> Todos mis grupos'],
+      'materia'   => $materia,
       'lecciones' => leccionModel::by_materia_profesor($id, get_user('id'))
     ];
 

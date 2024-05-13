@@ -132,11 +132,105 @@ class leccionesController extends Controller
 
   function editar($id)
   {
-    View::render('editar');
+    if (!is_profesor(get_user_role())) {
+      Flasher::new(get_notificaciones(), 'danger');
+      Redirect::to('dashboard');
+    }
+
+    //validar que exista la lección
+    if(!$leccion = leccionModel::by_id($id)){
+      Flasher::new('No existe la lección seleccionada.', 'danger');
+      Redirect::back();
+    }
+
+    $id_profesor = get_user('id');
+
+    //validar el id del profesor y del registro
+    if($leccion['id_profesor']!== $id_profesor && !is_admin(get_user_role())){
+      Flasher::new(get_notificaciones(), 'danger');
+      Redirect::back();
+    }
+
+    $data =
+      [
+        'title'             => 'Editar lección',
+        'slug'              => 'grupos',
+        'id_profesor'       => $id_profesor,
+        'l'                 => $leccion,
+        'button'            => ['url' => sprintf('grupos/materia/%s', $leccion['id_materia']), 'text' => '<i class="fas fa-undo"></i> Lecciones'],
+      ];
+
+    View::render('editar', $data);
   }
+
 
   function post_editar()
   {
+    try {
+      if (!check_posted_data(['csrf', 'id', 'titulo', 'video', 'contenido', 'fecha_max', 'status'], $_POST) || !Csrf::validate($_POST['csrf'])) {
+        throw new Exception(get_notificaciones());
+      }
+
+      // Validar rol
+      if (!is_profesor(get_user_role())) {
+        throw new Exception(get_notificaciones(1));
+      }
+
+      //validar que exista la lección
+      $id =clean($_POST["id"]);
+
+      if (!$leccion =leccionModel::by_id($id)){
+        throw new Exception('No existe la lección seleccionada.');
+      }
+
+      $id_profesor = get_user('id');
+
+      //validar el id del profesor y del registro
+      if($leccion['id_profesor']!== $id_profesor && !is_admin(get_user_role())){
+        throw new Exception(get_notificaciones());
+      }
+
+      $titulo      = clean($_POST['titulo']);
+      $video       = clean($_POST['video']);
+      $contenido   = clean($_POST['contenido'], true);
+      $fecha_max   = clean($_POST['fecha_max']);
+      $status      = clean($_POST['status']);
+
+      // Validar el titulo del usuario
+      if (strlen($titulo) < 5) {
+        throw new Exception('Ingresa un título mayor a 5 caracteres.');
+      }
+
+      // Validar que el url del video
+      if (!filter_var($video, FILTER_VALIDATE_URL) && !empty($video)) {
+        throw new Exception('Ingresa una URL de video válida.');
+      }
+
+      // Lección a guardar
+      $data = 
+      [
+        'titulo'           => $titulo,
+        'video'            => $video,
+        'contenido'        => $contenido,
+        'status'           => $status,
+        'fecha_disponible' => $fecha_max,
+      ];
+
+      // Actualizar registros a la base de datos
+      if (!leccionModel::update(leccionModel::$t1, ['id' => $id], $data)) {
+        throw new Exception(get_notificaciones(3));
+      }
+
+      Flasher::new(sprintf('Lección titulada <b>%s</b> actualizada con éxito.', add_ellipsis($titulo, 50)), 'success');
+      Redirect::to(sprintf('grupos/materia/%s', $leccion['id_materia']));
+
+    } catch (PDOException $e) {
+      Flasher::new($e->getMessage(), 'danger');
+      Redirect::back();
+    } catch (Exception $e) {
+      Flasher::new($e->getMessage(), 'danger');
+      Redirect::back();
+    }
   }
 
   function borrar($id)

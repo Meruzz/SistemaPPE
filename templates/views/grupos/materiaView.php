@@ -3,7 +3,12 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary"><?php echo $d->title; ?></h6>
+        <h6 class="m-0 font-weight-bold text-primary">
+            <?php echo $d->title; ?>
+            <div class="btn-group float-right">
+                <a class="btn btn-primary btn-sm" href="<?php echo buildURL('lecciones/agregar/', ['id_materia' => $d->materia->id], false, false); ?>"><i class="fas fa-plus"></i> Agregar lección</a>
+            </div>
+        </h6>
     </div>
     <div class="card-body">
         <?php if (!empty($d->lecciones->rows)) : ?>
@@ -21,9 +26,9 @@
                             </div>
                             <div class="col-md-3 text-right">
                                 <div class="btn-group">
-                                <a class="btn btn-success btn-sm" href="<?php echo sprintf('lecciones/editar/%s', $l->id); ?>"><i class="fas fa-edit"></i></a>
-                                <a class="btn btn-success btn-sm" href="<?php echo sprintf('lecciones/ver/%s', $l->id); ?>"><i class="fas fa-eye"></i></a>
-                                <a class="btn btn-danger btn-sm confirmar" href="<?php echo buildURL(sprintf('lecciones/borrar/%s', $l->id)); ?>"><i class="fas fa-trash"></i></a>
+                                    <a class="btn btn-primary btn-sm" href="<?php echo sprintf('lecciones/editar/%s', $l->id); ?>"><i class="fas fa-edit"></i></a>
+                                    <a class="btn btn-success btn-sm" href="<?php echo sprintf('lecciones/ver/%s', $l->id); ?>"><i class="fas fa-eye"></i></a>
+                                    <a class="btn btn-danger btn-sm confirmar" href="<?php echo buildURL(sprintf('lecciones/borrar/%s', $l->id)); ?>"><i class="fas fa-trash"></i></a>
                                 </div>
                             </div>
                         </div>
