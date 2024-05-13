@@ -53,7 +53,7 @@ class leccionesController extends Controller
 
     $data =
       [
-        'title'             => sprintf('Lección: %s', $leccion['titulo']) ,
+        'title'             => sprintf('Lección: %s', $leccion['titulo']),
         'hide_title'        => true,
         'slug'              => 'grupos',
         'id_profesor'       => $id_profesor,
@@ -263,8 +263,41 @@ class leccionesController extends Controller
 
   function borrar($id)
   {
-    // Proceso de borrado
+    try {
+      if (!check_get_data(['_t'], $_GET) || !Csrf::validate($_GET['_t'])) {
+        throw new Exception(get_notificaciones(0));
+      }
+
+      if (!is_profesor(get_user_role())) {
+        throw new Exception(get_notificaciones());
+      }
+
+      //validar que exista la lección
+      if (!$leccion = leccionModel::by_id($id)) {
+        throw new Exception('No existe la lección seleccionada.');
+      }
+
+      $id_profesor = get_user('id');
+
+      //validar el id del profesor y del registro
+      if ($leccion['id_profesor'] !== $id_profesor && !is_admin(get_user_role())) {
+        throw new Exception(get_notificaciones());
+      }
+
+
+      //Eliminar el registro de la base de datos
+      if (!leccionModel::remove(leccionModel::$t1, ['id' => $id], 1)) {
+        throw new Exception(get_notificaciones(4));
+      }
+      Flasher::new(sprintf('Lección titulada <b>%s</b> borrada con éxito.', add_ellipsis($leccion['titulo'])), 'success');
+      Redirect::back();
+      
+    } catch (PDOException $e) {
+      Flasher::new($e->getMessage(), 'danger');
+      Redirect::back();
+    } catch (Exception $e) {
+      Flasher::new($e->getMessage(), 'danger');
+      Redirect::back();
+    }
   }
-
-
 }

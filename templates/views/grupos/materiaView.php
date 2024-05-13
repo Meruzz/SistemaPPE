@@ -17,7 +17,8 @@
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-1"></div>
-                        <div class="col-5">Título de la lección</div>
+                        <div class="col-4">Título de la lección</div>
+                        <div class="col-1">Video</div>
                         <div class="col-2">Estado</div>
                         <div class="col-2">Fecha máxima</div>
                         <div class="col-2 text-right">Acción</div>
@@ -33,8 +34,15 @@
                                     <img src="<?php echo get_image('play.png'); ?>" alt="<?php echo $l->titulo; ?>" class="img-fluid" style="width: 40px;">
                                 </a>
                             </div>
-                            <div class="col-5">
+                            <div class="col-4">
                                 <span class="text-dark"><?php echo add_ellipsis($l->titulo, 100); ?></span>
+                            </div>
+                            <div class="col-1">
+                                <?php if (!empty($l->video)) : ?>
+                                    <span class="badge badge-success"><i class="fas fa-video"></i> Tiene video</span>
+                                <?php else : ?>
+                                    <span class="badge badge-danger"><i class="fas fa-video"></i> Sin video</span>
+                                <?php endif; ?>
                             </div>
                             <div class="col-2">
                                 <span class="text-dark"><?php echo format_estado_leccion($l->status); ?></span>
@@ -62,6 +70,7 @@
             </div>
         <?php endif; ?>
     </div>
+
 </div>
 
 <?php require_once INCLUDES . 'inc_footer.php'; ?>
