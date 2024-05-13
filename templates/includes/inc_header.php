@@ -39,7 +39,10 @@
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
+
+          <?php if (!isset($d->hide_title)): ?>
             <h1 class="h3 mb-0 text-gray-800"><?php echo isset($d->title) ? $d->title : null; ?></h1>
+            <?php endif; ?>
             <?php if (isset($d->button)) : ?>
               <?php
               $button_url = isset($d->button->url) ? $d->button->url : URL;

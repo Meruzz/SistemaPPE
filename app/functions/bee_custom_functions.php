@@ -279,3 +279,9 @@ function mail_recuperacion_contrasena($id_usuario)
 
   return sprintf($placeholder, $classes, $icon, $text);
 }
+
+//permite registrar videos con el link de youtube
+function parse_youtube_id($url) {
+  preg_match("/(youtube\.com\/watch\?v=|youtu\.be\/)([^\&\?\/]+)/", $url, $matches);
+  return $matches[2] ?? null;
+}

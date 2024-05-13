@@ -29,7 +29,13 @@ class leccionModel extends Model
   static function by_id($id)
   {
     // Un registro con $id
-    $sql = 'SELECT * FROM lecciones WHERE id = :id LIMIT 1';
+    $sql = 
+    'SELECT 
+    l.* ,
+    m.nombre AS materia
+    FROM lecciones l
+    LEFT JOIN materias m ON m.id = l.id_materia
+     WHERE l.id = :id LIMIT 1';
     return ($rows = parent::query($sql, ['id' => $id])) ? $rows[0] : [];
   }
 

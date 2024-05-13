@@ -31,7 +31,37 @@ class leccionesController extends Controller
 
   function ver($id)
   {
-    View::render('ver');
+
+    if (!is_profesor(get_user_role())) {
+      Flasher::new(get_notificaciones(), 'danger');
+      Redirect::to('dashboard');
+    }
+
+    //validar que exista la lección
+    if (!$leccion = leccionModel::by_id($id)) {
+      Flasher::new('No existe la lección seleccionada.', 'danger');
+      Redirect::back();
+    }
+
+    $id_profesor = get_user('id');
+
+    //validar el id del profesor y del registro
+    if ($leccion['id_profesor'] !== $id_profesor && !is_admin(get_user_role())) {
+      Flasher::new(get_notificaciones(), 'danger');
+      Redirect::back();
+    }
+
+    $data =
+      [
+        'title'             => sprintf('Lección: %s', $leccion['titulo']) ,
+        'hide_title'        => true,
+        'slug'              => 'grupos',
+        'id_profesor'       => $id_profesor,
+        'l'                 => $leccion
+      ];
+
+
+    View::render('ver', $data);
   }
 
   function agregar()
@@ -101,17 +131,17 @@ class leccionesController extends Controller
       }
 
       // Lección a guardar
-      $data = 
-      [
-        'id_materia'       => $id_materia,
-        'id_profesor'      => $id_profesor,
-        'titulo'           => $titulo,
-        'video'            => $video,
-        'contenido'        => $contenido,
-        'status'           => $status,
-        'fecha_disponible' => $fecha_max,
-        'creado'           => now()
-      ];
+      $data =
+        [
+          'id_materia'       => $id_materia,
+          'id_profesor'      => $id_profesor,
+          'titulo'           => $titulo,
+          'video'            => $video,
+          'contenido'        => $contenido,
+          'status'           => $status,
+          'fecha_disponible' => $fecha_max,
+          'creado'           => now()
+        ];
 
       // Insertar a la base de datos
       if (!$id = leccionModel::add(leccionModel::$t1, $data)) {
@@ -120,7 +150,6 @@ class leccionesController extends Controller
 
       Flasher::new(sprintf('Nueva lección titulada <b>%s</b> agregada con éxito para la materia <b>%s</b>.', add_ellipsis($titulo, 20), $materia['nombre']), 'success');
       Redirect::to(sprintf('grupos/materia/%s', $id_materia));
-
     } catch (PDOException $e) {
       Flasher::new($e->getMessage(), 'danger');
       Redirect::back();
@@ -138,7 +167,7 @@ class leccionesController extends Controller
     }
 
     //validar que exista la lección
-    if(!$leccion = leccionModel::by_id($id)){
+    if (!$leccion = leccionModel::by_id($id)) {
       Flasher::new('No existe la lección seleccionada.', 'danger');
       Redirect::back();
     }
@@ -146,18 +175,18 @@ class leccionesController extends Controller
     $id_profesor = get_user('id');
 
     //validar el id del profesor y del registro
-    if($leccion['id_profesor']!== $id_profesor && !is_admin(get_user_role())){
+    if ($leccion['id_profesor'] !== $id_profesor && !is_admin(get_user_role())) {
       Flasher::new(get_notificaciones(), 'danger');
       Redirect::back();
     }
 
     $data =
       [
-        'title'             => 'Editar lección',
+        'title'             => sprintf('Editar lección: %s', $leccion['titulo']),
         'slug'              => 'grupos',
         'id_profesor'       => $id_profesor,
         'l'                 => $leccion,
-        'button'            => ['url' => sprintf('grupos/materia/%s', $leccion['id_materia']), 'text' => '<i class="fas fa-undo"></i> Lecciones'],
+        'button'            => ['url' => sprintf('grupos/materia/%s', $leccion['id_materia']), 'text' => '<i class="fas fa-arrow-left"></i> Lecciones'],
       ];
 
     View::render('editar', $data);
@@ -177,16 +206,16 @@ class leccionesController extends Controller
       }
 
       //validar que exista la lección
-      $id =clean($_POST["id"]);
+      $id = clean($_POST["id"]);
 
-      if (!$leccion =leccionModel::by_id($id)){
+      if (!$leccion = leccionModel::by_id($id)) {
         throw new Exception('No existe la lección seleccionada.');
       }
 
       $id_profesor = get_user('id');
 
       //validar el id del profesor y del registro
-      if($leccion['id_profesor']!== $id_profesor && !is_admin(get_user_role())){
+      if ($leccion['id_profesor'] !== $id_profesor && !is_admin(get_user_role())) {
         throw new Exception(get_notificaciones());
       }
 
@@ -207,14 +236,14 @@ class leccionesController extends Controller
       }
 
       // Lección a guardar
-      $data = 
-      [
-        'titulo'           => $titulo,
-        'video'            => $video,
-        'contenido'        => $contenido,
-        'status'           => $status,
-        'fecha_disponible' => $fecha_max,
-      ];
+      $data =
+        [
+          'titulo'           => $titulo,
+          'video'            => $video,
+          'contenido'        => $contenido,
+          'status'           => $status,
+          'fecha_disponible' => $fecha_max,
+        ];
 
       // Actualizar registros a la base de datos
       if (!leccionModel::update(leccionModel::$t1, ['id' => $id], $data)) {
@@ -223,7 +252,6 @@ class leccionesController extends Controller
 
       Flasher::new(sprintf('Lección titulada <b>%s</b> actualizada con éxito.', add_ellipsis($titulo, 50)), 'success');
       Redirect::to(sprintf('grupos/materia/%s', $leccion['id_materia']));
-
     } catch (PDOException $e) {
       Flasher::new($e->getMessage(), 'danger');
       Redirect::back();
@@ -237,4 +265,6 @@ class leccionesController extends Controller
   {
     // Proceso de borrado
   }
+
+
 }
