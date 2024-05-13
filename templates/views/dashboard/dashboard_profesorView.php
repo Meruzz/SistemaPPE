@@ -70,5 +70,19 @@
 			</div>
 		</div>
 	</div>
+	<style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        #content-wrapper {
+            min-height: 62vh; /* Altura completa de la ventana de visualización */
+            display: flex;
+            flex-direction: column;
+        }
+        .footer {
+            margin-top: auto; /* Empuja el footer al fondo si el contenido no es suficiente */
+        }
+    </style>
 
 <?php require_once INCLUDES . 'inc_footer.php'; ?>

@@ -177,4 +177,31 @@ class grupoModel extends Model
         WHERE g.id = :id';
         return (parent::query($sql, ['id' => $id_grupo])) ? true : false;
     }
+
+    static function by_alumno($id_alumno)
+    {
+        $sql =
+            'SELECT
+            g.*
+            FROM
+            grupos g 
+            LEFT JOIN grupos_alumnos ga ON ga.id_grupo = g.id
+            LEFT JOIN usuarios u ON u.id = ga.id_alumno
+            WHERE 
+            u.id = :id AND u.rol = "alumno"';
+
+            $grupo =[];
+            $rows  = parent::query($sql, ['id' => $id_alumno]);
+
+            if (!$rows) return $grupo;
+            
+            //Cargando materias
+            $grupo = $rows[0];
+            $grupo ['materias'] = grupoModel::materias_asignadas($grupo['id']);
+
+            //Cargando compañeros
+            $grupo['alumnos'] = grupoModel::alumnos_asignados($grupo['id']);
+            
+            return $grupo;
+    }
 }
