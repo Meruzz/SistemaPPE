@@ -13,18 +13,36 @@
     <div class="card-body">
         <?php if (!empty($d->lecciones->rows)) : ?>
             <ul class="list-group">
+                <!-- Encabezados de columnas -->
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-5">Título de la lección</div>
+                        <div class="col-2">Estado</div>
+                        <div class="col-2">Fecha máxima</div>
+                        <div class="col-2 text-right">Acción</div>
+                    </div>
+                </li>
+
+                <!-- Detalles de cada lección -->
                 <?php foreach ($d->lecciones->rows as $l) : ?>
                     <li class="list-group-item">
                         <div class="row">
-                            <div class="col-xl-1">
+                            <div class="col-1">
                                 <a href="<?php echo sprintf('lecciones/ver/%s', $l->id); ?>">
-                                    <img src="<?php echo get_image('play.png'); ?>" alt="<?php echo $l->titulo; ?>" class="img-fluid" style="width: 50px;">
+                                    <img src="<?php echo get_image('play.png'); ?>" alt="<?php echo $l->titulo; ?>" class="img-fluid" style="width: 40px;">
                                 </a>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-5">
                                 <span class="text-dark"><?php echo add_ellipsis($l->titulo, 100); ?></span>
                             </div>
-                            <div class="col-md-3 text-right">
+                            <div class="col-2">
+                                <span class="text-dark"><?php echo format_estado_leccion($l->status); ?></span>
+                            </div>
+                            <div class="col-2">
+                                <span class="text-dark"><?php echo format_date($l->fecha_disponible); ?></span>
+                            </div>
+                            <div class="col-2 text-right">
                                 <div class="btn-group">
                                     <a class="btn btn-primary btn-sm" href="<?php echo sprintf('lecciones/editar/%s', $l->id); ?>"><i class="fas fa-edit"></i></a>
                                     <a class="btn btn-success btn-sm" href="<?php echo sprintf('lecciones/ver/%s', $l->id); ?>"><i class="fas fa-eye"></i></a>

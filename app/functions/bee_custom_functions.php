@@ -249,3 +249,33 @@ function mail_recuperacion_contrasena($id_usuario)
       ['publica', 'Publicada']
     ];
   }
+
+  function format_estado_leccion($status)
+{
+  $placeholder = '<div class="badge %s"><i class="%s"></i> %s</div>';
+  $classes     = '';
+  $icon        = '';
+  $text        = '';
+
+  switch ($status) {
+    case 'borrador':
+      $classes = 'badge-info';
+      $icon    = 'fas fa-eraser';
+      $text    = 'Borrador';
+      break;
+
+    case 'publica':
+      $classes = 'badge-success';
+      $icon    = 'fas fa-check';
+      $text    = 'Publicada';
+      break;
+
+    default:
+      $classes = 'badge-danger';
+      $icon    = 'fas fa-question';
+      $text    = 'Desconocido';
+      break;
+  }
+
+  return sprintf($placeholder, $classes, $icon, $text);
+}
