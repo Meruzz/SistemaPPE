@@ -19,6 +19,11 @@ class materiasController extends Controller
 
   function index()
   {
+    if (!is_admin(get_user_role())) {
+      Flasher::new(get_notificaciones(), 'danger');
+      Redirect::to('dashboard');
+    }
+
     $data =
       [
         'title' => 'Todas las Materias',
@@ -33,8 +38,14 @@ class materiasController extends Controller
 
   function ver($id)
   {
+    if (!is_admin(get_user_role())) {
+      Flasher::new(get_notificaciones(), 'danger');
+      Redirect::to('dashboard');
+    }
+
     if (!$materia = materiaModel::by_id($id)) {
       Flasher::new('No existe la materia en la base de datos', 'danger');
+      Redirect::to('materias');
     }
     $data =
       [
@@ -46,9 +57,29 @@ class materiasController extends Controller
     View::render('ver', $data);
   }
 
+  function asignadas()
+  {
+    if (!is_profesor(get_user_role())) {
+      Flasher::new(get_notificaciones(), 'danger');
+      Redirect::to('dashboard');
+    }
+
+    $id_profesor = get_user('id');
+
+    $data = [
+      'title'    => 'Materias Asignadas',
+      'slug'     => 'materias',
+      'materias'   => materiaModel::materias_profesor($id_profesor)
+    ];
+
+    View::render('asignadas', $data);
+  }
   function agregar()
   {
-
+    if (!is_admin(get_user_role())) {
+      Flasher::new(get_notificaciones(), 'danger');
+      Redirect::to('dashboard');
+    }
     $data =
       [
         'title' => 'Agregar Materia',

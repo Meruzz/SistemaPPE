@@ -20,6 +20,12 @@
         <span>Grupos</span></a>
 </li>
 
+<li class="nav-item <?php echo $slug === 'materias' ? 'active' : null; ?>">
+    <a class="nav-link" href="materias/asignadas">
+        <i class="fas fa-fw fa-book"></i>
+        <span>Materias</span></a>
+</li>
+
 <!-- Divider -->
 <hr class="sidebar-divider d-none d-md-block">
 

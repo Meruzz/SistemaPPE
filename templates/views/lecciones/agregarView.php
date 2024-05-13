@@ -56,8 +56,13 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="fecha_inicial">Fecha inicial</label>
+                            <input type="date" class="form-control" id="fecha_inicial" name="fecha_inicial" required>
+                        </div>
+
+                        <div class="form-group">
                             <label for="fecha_max">Fecha máxima</label>
-                            <input type="date" class="form-control" id="fecha_max" name="fecha_max">
+                            <input type="date" class="form-control" id="fecha_max" name="fecha_max" required>
                         </div>
 
                         <button class="btn btn-success" type="submit">Guardar lección</button>

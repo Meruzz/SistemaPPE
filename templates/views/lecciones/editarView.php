@@ -40,6 +40,11 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="fecha_inicial">Fecha inicial</label>
+                            <input type="date" class="form-control" id="fecha_inicial" name="fecha_inicial" value="<?php echo date('Y-m-d', strtotime($d->l->fecha_inicial));?>">
+                        </div>
+
+                        <div class="form-group">
                             <label for="fecha_max">Fecha máxima</label>
                             <input type="date" class="form-control" id="fecha_max" name="fecha_max" value="<?php echo date('Y-m-d', strtotime($d->l->fecha_disponible));?>">
                         </div>
