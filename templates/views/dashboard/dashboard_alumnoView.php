@@ -9,7 +9,7 @@
 			<div class="card-body">
 				<div class="row no-gutters align-items-center">
 					<div class="col mr-2">
-						<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Materias</div>
+						<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Grupos</div>
 						<div class="h6 mb-0 font-weight-bold text-gray-800"><?php echo empty($d->grupo) ? 'Sin grupo asignado' : sprintf('<a href=alumno/grupo">%s</a>', $d->grupo->nombre); ?></div>
 					</div>
 					<div class="col-auto">
@@ -26,7 +26,7 @@
 			<div class="card-body">
 				<div class="row no-gutters align-items-center">
 					<div class="col mr-2">
-						<div class="text-xs font-weight-bold text-success text-uppercase mb-1">Grupos</div>
+						<div class="text-xs font-weight-bold text-success text-uppercase mb-1">Materias</div>
 						<div class="h6 mb-0 font-weight-bold text-gray-800"><a href="alumno/grupo">Ver materias</a></div>
 					</div>
 					<div class="col-auto">
