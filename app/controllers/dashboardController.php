@@ -20,6 +20,9 @@ class dashboardController extends Controller
   function index()
   {
 
+    debug(leccionModel::total_by_year());
+    die;
+
     $rol = get_user_role();
     $data =
       [

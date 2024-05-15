@@ -139,4 +139,34 @@ class leccionModel extends Model
 
     return PaginationHandler::paginate($sql, $data);
   }
+
+  static function total_by_year($año = null)
+  {
+    $año = $año === null ? date('Y') : $año;
+
+    $sql =
+      "SELECT 
+        Months.mm AS mes, 
+        Months.m AS month, 
+        COUNT(l.id) AS total 
+    FROM 
+        (
+            SELECT 1 as m, 'Enero' AS mm
+            UNION SELECT 2 as m, 'Febrero' AS mm
+            UNION SELECT 3 as m, 'Marzo' AS mm
+            UNION SELECT 4 as m, 'Abril' AS mm
+            UNION SELECT 5 as m, 'Mayo' AS mm
+            UNION SELECT 6 as m, 'Junio' AS mm
+            UNION SELECT 7 as m, 'Julio' AS mm
+            UNION SELECT 8 as m, 'Agosto' AS mm
+            UNION SELECT 9 as m, 'Septiembre' AS mm
+            UNION SELECT 10 as m, 'Octubre' AS mm
+            UNION SELECT 11 as m, 'Noviembre' AS mm
+            UNION SELECT 12 as m, 'Diciembre' AS mm
+        ) AS Months
+    LEFT JOIN lecciones l ON Months.m = MONTH(l.creado)
+    AND YEAR(l.creado) = :ano GROUP BY Months.m";
+
+    return parent::query($sql, ['ano' => $año]);
+  }
 }

@@ -340,3 +340,54 @@ function format_tiempo_restante($fecha)
   return $output;
 
 }
+
+function get_ingresos()
+{
+  return
+  [
+    ['Enero'      ,7849],
+    ['Febrero'    ,3547],
+    ['Marzo'      ,7578],
+    ['Abril'      ,1578],
+    ['Mayo'       ,9578],
+    ['Junio'      ,4578],
+    ['Julio'      ,1578],
+    ['Agosto'     ,4578],
+    ['Septiembre' ,3895],
+    ['Octubre'    ,8578],
+    ['Noviembre'  ,6578],
+    ['Diciembre'  ,9578]
+  ];
+}
+
+function get_proyectos()
+{
+  return
+  [
+    [
+      'titulo'   =>'Programa de participación estudiantil.',
+      'tipo'     =>'danger',
+      'progreso' =>20
+    ],
+    [
+      'titulo'   =>'Registro de nuevos alumnos.',
+      'tipo'     =>'warning',
+      'progreso' =>20
+    ],
+    [
+      'titulo'   =>'Registro de profesores.',
+      'tipo'     =>'primary',
+      'progreso' =>60
+    ],
+    [
+      'titulo'   =>'Capacitación de personal.',
+      'tipo'     =>'info',
+      'progreso' =>80
+    ],
+    [
+      'titulo'   =>'Crear un sistema escolar.',
+      'tipo'     =>'success',
+      'progreso' =>100
+    ],
+  ];
+}
