@@ -29,20 +29,18 @@ class dashboardController extends Controller
 
     if (is_admin($rol)) {
 
+      View::render('dashboard_admin', $data);
     } else if (is_profesor($rol)) {
 
       $data['stats'] = profesorModel::stats_by_id(get_user('id'));
       View::render('dashboard_profesor', $data);
-
     } else if (is_alumno($rol)) {
 
-      $data['grupo'] = grupoModel::by_alumno(get_user('id')) ;
+      $data['grupo'] = grupoModel::by_alumno(get_user('id'));
       View::render('dashboard_alumno', $data);
-
     } else {
 
       echo 'Tu rol de usuario no es valido.';
-
     }
   }
 
