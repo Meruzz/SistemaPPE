@@ -65,9 +65,9 @@ class adminModel extends Model {
     $sql         = 'SELECT u.rol, COUNT(u.id) AS total FROM usuarios u GROUP BY u.rol';
     $comunidad   = parent::query($sql);
 
-    $ingresos    =[];
+    $ingresos    = get_ingresos();
 
-    $ensenanza   =[];
+    $ensenanza   = leccionModel::total_by_year();
 
     return
       [
