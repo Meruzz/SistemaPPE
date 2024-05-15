@@ -285,3 +285,58 @@ function parse_youtube_id($url) {
   preg_match("/(youtube\.com\/watch\?v=|youtu\.be\/)([^\&\?\/]+)/", $url, $matches);
   return $matches[2] ?? null;
 }
+
+function format_tiempo_restante($fecha)
+{
+  $output    = '';
+  $segundos  = strtotime($fecha) - time();
+  $segundos  = $segundos < 0 ? 0 : $segundos;
+  $minutos   = $segundos / 60;
+  $horas     = $minutos / 60;
+  $dias      = $horas / 24;
+  $semanas   = $dias /7;
+  $meses     = $semanas / 4;
+  $anos      = $meses / 12;
+
+  switch (true) {
+    case $anos >= 1:
+    $anos   = floor($anos);
+    $output = sprintf('%s %s', $anos, $anos === 1 ? 'año restante.' : 'años restantes.');
+    break;
+
+    case $meses >= 2:
+    $output = sprintf('%s meses restantes.', floor($meses));
+    break;
+
+    case $semanas >= 2:
+    $output = sprintf('%s semanas restantes.', floor($semanas));
+    break;
+
+    case $dias >= 3:
+    $output = sprintf('%s dias restantes.', floor($dias));
+    break;
+
+    case $horas >= 2:
+    $output = sprintf('%s horas restantes.', floor($horas));
+    break;
+
+    case $minutos >= 2:
+    $output = sprintf('%s minutos restantes.', floor($minutos));
+    break;
+
+    case $segundos > 0:
+    $output = sprintf('%s segundos restantes.', $segundos);
+    break;
+
+    case $segundos === 0:
+    $output = sprintf('El tiempo de ha terminado');
+    break;
+  
+    default:
+      
+    $output = 'Desconocido.';
+      break;
+  }
+  return $output;
+
+}

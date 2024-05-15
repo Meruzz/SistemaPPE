@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class movementModel extends Model
 {
@@ -18,13 +18,13 @@ class movementModel extends Model
   public function add()
   {
     $sql = 'INSERT INTO movements (type, description, amount, created_at) VALUES (:type, :description, :amount, :created_at)';
-    $data = 
-    [
-      'type'       => $this->type,
-      'description'=> $this->description,
-      'amount'     => (float) $this->amount,
-      'created_at' => now()
-    ];
+    $data =
+      [
+        'type'       => $this->type,
+        'description' => $this->description,
+        'amount'     => (float) $this->amount,
+        'created_at' => now()
+      ];
 
     try {
       return ($this->id = parent::query($sql, $data)) ? $this->id : false;
@@ -103,13 +103,13 @@ class movementModel extends Model
   public function update()
   {
     $sql = 'UPDATE movements SET type=:type, description=:description, amount=:amount WHERE id=:id';
-    $data = 
-    [
-      'id'         => $this->id,
-      'type'       => $this->type,
-      'description'=> $this->description,
-      'amount'     => (float) $this->amount,
-    ];
+    $data =
+      [
+        'id'         => $this->id,
+        'type'       => $this->type,
+        'description' => $this->description,
+        'amount'     => (float) $this->amount,
+      ];
 
     try {
       return (parent::query($sql, $data)) ? true : false;
@@ -126,10 +126,10 @@ class movementModel extends Model
   public function delete()
   {
     $sql = 'DELETE FROM movements WHERE id=:id LIMIT 1';
-    $data = 
-    [
-      'id' => $this->id
-    ];
+    $data =
+      [
+        'id' => $this->id
+      ];
 
     try {
       return (parent::query($sql, $data)) ? true : false;
