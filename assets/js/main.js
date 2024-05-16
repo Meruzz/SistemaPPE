@@ -1154,9 +1154,9 @@ $(document).ready(function () {
                     },
                     ticks: {
                       maxTicksLimit: 20,
-                      autoSkip: false, // Evita que Chart.js omita algunas etiquetas automáticamente
+                      /* autoSkip: false, // Evita que Chart.js omita algunas etiquetas automáticamente
                       maxRotation: 0, // Evita la rotación de las etiquetas
-                      minRotation: 0, // Mantiene las etiquetas totalmente horizontales
+                      minRotation: 0, // Mantiene las etiquetas totalmente horizontales */
                     },
                   },
                 ],
@@ -1241,22 +1241,24 @@ $(document).ready(function () {
       .done(function (res) {
         if (res.status === 200) {
           var myPieChart = new Chart(element, {
-            type: 'doughnut',
+            type: "doughnut",
             data: {
               labels: res.data.labels,
-              datasets: [{
-                data: res.data.data,
-                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
-                hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
-                hoverBorderColor: "rgba(234, 236, 244, 1)",
-              }],
+              datasets: [
+                {
+                  data: res.data.data,
+                  backgroundColor: ["#4e73df", "#1cc88a", "#36b9cc"],
+                  hoverBackgroundColor: ["#2e59d9", "#17a673", "#2c9faf"],
+                  hoverBorderColor: "rgba(234, 236, 244, 1)",
+                },
+              ],
             },
             options: {
               maintainAspectRatio: false,
               tooltips: {
                 backgroundColor: "rgb(255,255,255)",
                 bodyFontColor: "#858796",
-                borderColor: '#dddfeb',
+                borderColor: "#dddfeb",
                 borderWidth: 1,
                 xPadding: 15,
                 yPadding: 15,
@@ -1264,13 +1266,11 @@ $(document).ready(function () {
                 caretPadding: 10,
               },
               legend: {
-                display: true
+                display: true,
               },
               cutoutPercentage: 0,
             },
           });
-          
-
         } else {
           wrapper.html(res.msg);
         }
@@ -1285,6 +1285,124 @@ $(document).ready(function () {
 
   //Dibujar gráfica de resumen de lecciones
   function draw_resumen_enseñanza_chart(element) {
-    console.log("Activando gráfica 3");
+    var wrapper = element.parent("div"),
+      _t = Bee.csrf,
+      action = "get",
+      hook = "bee_hook";
+
+    //AJAX
+    $.ajax({
+      url: "ajax/get_resumen_ensenanza",
+      type: "get",
+      dataType: "json",
+      data: { _t, action, hook },
+      beforeSend: function () {
+        wrapper.waitMe();
+      },
+    })
+      .done(function (res) {
+        if (res.status === 200) {
+          console.log(res.data);
+
+          var myLineChart = new Chart(element, {
+            type: "bar",
+            data: {
+              labels: res.data.labels,
+              datasets: [
+                {
+                  label: "Lecciones",
+                  lineTension: 0.3,
+                  backgroundColor: "rgba(78, 115, 223, 0.9)",
+                  borderColor: "rgba(78, 115, 223, 1)",
+                  pointRadius: 3,
+                  pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                  pointBorderColor: "rgba(78, 115, 223, 1)",
+                  pointHoverRadius: 3,
+                  pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                  pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                  pointHitRadius: 10,
+                  pointBorderWidth: 2,
+                  data: res.data.data,
+                },
+              ],
+            },
+            options: {
+              maintainAspectRatio: false,
+              layout: {
+                padding: {
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                },
+              },
+              scales: {
+                xAxes: [
+                  {
+                    time: {
+                      unit: "date",
+                    },
+                    gridLines: {
+                      display: false,
+                      drawBorder: false,
+                    },
+                    ticks: {
+                      maxTicksLimit: 20,
+                    },
+                  },
+                ],
+                yAxes: [
+                  {
+                    ticks: {
+                      maxTicksLimit: 8,
+                      padding: 10,
+                    },
+                    gridLines: {
+                      color: "rgb(234, 236, 244)",
+                      zeroLineColor: "rgb(234, 236, 244)",
+                      drawBorder: false,
+                      borderDash: [2],
+                      zeroLineBorderDash: [2],
+                    },
+                  },
+                ],
+              },
+              legend: {
+                display: false,
+              },
+              tooltips: {
+                backgroundColor: "rgb(255,255,255)",
+                bodyFontColor: "#858796",
+                titleMarginBottom: 10,
+                titleFontColor: "#6e707e",
+                titleFontSize: 14,
+                borderColor: "#dddfeb",
+                borderWidth: 1,
+                xPadding: 15,
+                yPadding: 15,
+                displayColors: false,
+                intersect: false,
+                mode: "index",
+                caretPadding: 10,
+                callbacks: {
+                  label: function (tooltipItem, chart) {
+                    var datasetLabel =
+                      chart.datasets[tooltipItem.datasetIndex].label || "";
+                    return datasetLabel + ": " + tooltipItem.yLabel;
+                  },
+                },
+              },
+            },
+          });
+        } else {
+          wrapper.html(res.msg);
+        }
+      })
+      .fail(function (err) {
+        wrapper.html("Hubo un error al cargar la información.");
+      })
+      .always(function () {
+        wrapper.waitMe("hide");
+      });
   }
 });

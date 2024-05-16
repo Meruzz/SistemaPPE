@@ -702,4 +702,36 @@ class ajaxController extends Controller
       json_output(json_build(400, null, $e->getMessage()));
     }
   }
+
+  function get_resumen_ensenanza()
+  {
+    try {
+      if (!is_admin(get_user_role())) {
+        throw new Exception(get_notificaciones(1));
+      }
+
+      //operaciones necesarias
+      $stats    = adminModel::stats();
+      $ensenanza = $stats['ensenanza'];
+      $labels   = [];
+      $dataset  = [];
+
+      foreach ($ensenanza as $v){
+        $labels []  = $v['mes'];
+        $dataset [] = $v['total'];
+      }
+
+      $data =
+      [
+        'labels' => $labels,
+        'data'   => $dataset
+      ];
+      json_output(json_build(200, $data));
+
+    } catch (Exception $e) {
+      json_output(json_build(400, null, $e->getMessage()));
+    } catch (PDOException $e) {
+      json_output(json_build(400, null, $e->getMessage()));
+    }
+  }
 }
