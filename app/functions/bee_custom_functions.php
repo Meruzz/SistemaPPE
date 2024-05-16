@@ -367,12 +367,12 @@ function get_proyectos()
     [
       'titulo'   =>'Programa de participación estudiantil.',
       'tipo'     =>'danger',
-      'progreso' =>20
+      'progreso' =>10
     ],
     [
       'titulo'   =>'Registro de nuevos alumnos.',
       'tipo'     =>'warning',
-      'progreso' =>20
+      'progreso' =>40
     ],
     [
       'titulo'   =>'Registro de profesores.',
@@ -388,6 +388,6 @@ function get_proyectos()
       'titulo'   =>'Crear un sistema escolar.',
       'tipo'     =>'success',
       'progreso' =>100
-    ],
+    ]
   ];
 }
