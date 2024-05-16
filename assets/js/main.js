@@ -1128,7 +1128,7 @@ $(document).ready(function () {
                   pointHoverBorderColor: "rgba(78, 115, 223, 1)",
                   pointHitRadius: 10,
                   pointBorderWidth: 2,
-                  data: res.data.data
+                  data: res.data.data,
                 },
               ],
             },
@@ -1154,9 +1154,9 @@ $(document).ready(function () {
                     },
                     ticks: {
                       maxTicksLimit: 20,
-                      autoSkip: false,  // Evita que Chart.js omita algunas etiquetas automáticamente
-                      maxRotation: 0,  // Evita la rotación de las etiquetas
-                      minRotation: 0   // Mantiene las etiquetas totalmente horizontales
+                      autoSkip: false, // Evita que Chart.js omita algunas etiquetas automáticamente
+                      maxRotation: 0, // Evita la rotación de las etiquetas
+                      minRotation: 0, // Mantiene las etiquetas totalmente horizontales
                     },
                   },
                 ],
@@ -1223,7 +1223,64 @@ $(document).ready(function () {
 
   //Dibujar gráfica de resumen de comunidad
   function draw_resumen_comunidad_chart(element) {
-    console.log("Activando gráfica 2");
+    var wrapper = element.parent("div"),
+      _t = Bee.csrf,
+      action = "get",
+      hook = "bee_hook";
+
+    //AJAX
+    $.ajax({
+      url: "ajax/get_resumen_comunidad",
+      type: "get",
+      dataType: "json",
+      data: { _t, action, hook },
+      beforeSend: function () {
+        wrapper.waitMe();
+      },
+    })
+      .done(function (res) {
+        if (res.status === 200) {
+          var myPieChart = new Chart(element, {
+            type: 'doughnut',
+            data: {
+              labels: res.data.labels,
+              datasets: [{
+                data: res.data.data,
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc'],
+                hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf'],
+                hoverBorderColor: "rgba(234, 236, 244, 1)",
+              }],
+            },
+            options: {
+              maintainAspectRatio: false,
+              tooltips: {
+                backgroundColor: "rgb(255,255,255)",
+                bodyFontColor: "#858796",
+                borderColor: '#dddfeb',
+                borderWidth: 1,
+                xPadding: 15,
+                yPadding: 15,
+                displayColors: false,
+                caretPadding: 10,
+              },
+              legend: {
+                display: true
+              },
+              cutoutPercentage: 0,
+            },
+          });
+          
+
+        } else {
+          wrapper.html(res.msg);
+        }
+      })
+      .fail(function (err) {
+        wrapper.html("Hubo un error al cargar la información.");
+      })
+      .always(function () {
+        wrapper.waitMe("hide");
+      });
   }
 
   //Dibujar gráfica de resumen de lecciones

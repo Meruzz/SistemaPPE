@@ -669,4 +669,37 @@ class ajaxController extends Controller
       json_output(json_build(400, null, $e->getMessage()));
     }
   }
+
+
+  function get_resumen_comunidad()
+  {
+    try {
+      if (!is_admin(get_user_role())) {
+        throw new Exception(get_notificaciones(1));
+      }
+
+      //operaciones necesarias
+      $stats    = adminModel::stats();
+      $comunidad = $stats['comunidad'];
+      $labels   = [];
+      $dataset  = [];
+
+      foreach ($comunidad as $v){
+        $labels []  = $v['rol'];
+        $dataset [] = $v['total'];
+      }
+
+      $data =
+      [
+        'labels' => $labels,
+        'data'   => $dataset
+      ];
+      json_output(json_build(200, $data));
+
+    } catch (Exception $e) {
+      json_output(json_build(400, null, $e->getMessage()));
+    } catch (PDOException $e) {
+      json_output(json_build(400, null, $e->getMessage()));
+    }
+  }
 }
