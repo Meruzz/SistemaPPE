@@ -1154,9 +1154,6 @@ $(document).ready(function () {
                     },
                     ticks: {
                       maxTicksLimit: 20,
-                      /* autoSkip: false, // Evita que Chart.js omita algunas etiquetas automáticamente
-                      maxRotation: 0, // Evita la rotación de las etiquetas
-                      minRotation: 0, // Mantiene las etiquetas totalmente horizontales */
                     },
                   },
                 ],
@@ -1247,8 +1244,13 @@ $(document).ready(function () {
               datasets: [
                 {
                   data: res.data.data,
-                  backgroundColor: ["#4e73df", "#1cc88a", "#36b9cc"],
-                  hoverBackgroundColor: ["#2e59d9", "#17a673", "#2c9faf"],
+                  backgroundColor: ["#1cc88a", "#4e73df", "#36b9cc", "#E4C900"],
+                  hoverBackgroundColor: [
+                    "#17a673",
+                    "#2e59d9",
+                    "#2c9faf",
+                    "#f6c23e",
+                  ],
                   hoverBorderColor: "rgba(234, 236, 244, 1)",
                 },
               ],
@@ -1405,4 +1407,26 @@ $(document).ready(function () {
         wrapper.waitMe("hide");
       });
   }
+
+  //Recargar la tabla de resumen de ingresos
+  $('.recargar_resumen_ingresos_chart').on('click', recargar_resumen_ingresos_chart);
+  function recargar_resumen_ingresos_chart(e) {
+    e.preventDefault();
+
+    var chart = $('#resumen_ingresos_chart');
+    if (chart.length === 0) return;
+    draw_resumen_ingresos_chart(chart);
+  }
+
+
+  //Recargar la tabla de resumen de Enseñanza
+  $('.recargar_resumen_enseñanza_chart').on('click', recargar_resumen_enseñanza_chart);
+  function recargar_resumen_enseñanza_chart(e) {
+    e.preventDefault();
+
+    var chart = $('#resumen_enseñanza_chart');
+    if (chart.length === 0) return;
+    draw_resumen_enseñanza_chart(chart);
+  }
+
 });
