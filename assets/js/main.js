@@ -1409,23 +1409,67 @@ $(document).ready(function () {
   }
 
   //Recargar la tabla de resumen de ingresos
-  $('.recargar_resumen_ingresos_chart').on('click', recargar_resumen_ingresos_chart);
+  $(".recargar_resumen_ingresos_chart").on(
+    "click",
+    recargar_resumen_ingresos_chart
+  );
   function recargar_resumen_ingresos_chart(e) {
     e.preventDefault();
 
-    var chart = $('#resumen_ingresos_chart');
+    var chart = $("#resumen_ingresos_chart");
     if (chart.length === 0) return;
     draw_resumen_ingresos_chart(chart);
   }
 
   //Recargar la tabla de resumen de Enseñanza
-  $('.recargar_resumen_enseñanza_chart').on('click', recargar_resumen_enseñanza_chart);
+  $(".recargar_resumen_enseñanza_chart").on(
+    "click",
+    recargar_resumen_enseñanza_chart
+  );
   function recargar_resumen_enseñanza_chart(e) {
     e.preventDefault();
 
-    var chart = $('#resumen_enseñanza_chart');
+    var chart = $("#resumen_enseñanza_chart");
     if (chart.length === 0) return;
     draw_resumen_enseñanza_chart(chart);
   }
 
+  $("#reiniciar_sistema_form").on("submit", reiniciar_sistema);
+  function reiniciar_sistema(e) {
+    e.preventDefault();
+
+    var form = $(this),
+      button = $("button", form),
+      data = new FormData(form.get(0));
+
+    if (!confirm("¿Estas seguro de borrar toda la base de datos?"))
+      return false;
+
+    // AJAX
+    $.ajax({
+      url: "ajax/reiniciar_sistema",
+      type: "post",
+      dataType: "json",
+      processData: false,
+      contentType: false,
+      cache: false,
+      data: data,
+      beforeSend: function () {
+        button.waitMe();
+      },
+    })
+      .done(function (res) {
+        if (res.status === 200) {
+          toastr.success(res.msg, '¡Bien!');
+        } else {
+          toastr.error(res.msg, "¡Upss!");
+        }
+      })
+      .fail(function (err) {
+        toastr.error("Hubo un error en la petición.", "¡Upss!");
+      })
+      .always(function () {
+        button.waitMe("hide");
+      });
+  }
 });
