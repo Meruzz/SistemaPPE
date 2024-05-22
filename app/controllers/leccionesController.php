@@ -19,10 +19,15 @@ class leccionesController extends Controller
 
   function index()
   {
+    if (!is_admin(get_user_role())) {
+      Flasher::new(get_notificaciones(), 'danger');
+      Redirect::back();
+    }
     $data =
       [
-        'title' => 'Reemplazar título',
-        'msg'   => 'Bienvenido al controlador de "lecciones", se ha creado con éxito si ves este mensaje.'
+        'title'     => 'Todas las lecciones',
+        'slug'      => 'lecciones',
+        'lecciones' => leccionModel::all_paginated()
       ];
 
     // Descomentar vista si requerida

@@ -1418,7 +1418,6 @@ $(document).ready(function () {
     draw_resumen_ingresos_chart(chart);
   }
 
-
   //Recargar la tabla de resumen de Enseñanza
   $('.recargar_resumen_enseñanza_chart').on('click', recargar_resumen_enseñanza_chart);
   function recargar_resumen_enseñanza_chart(e) {

@@ -26,6 +26,21 @@ class leccionModel extends Model
     return ($rows = parent::query($sql)) ? $rows : [];
   }
 
+  static function all_paginated()
+  {
+    // Todos los registros
+    $sql = 
+    'SELECT
+    l.*, 
+    u.nombre_completo AS profesor,
+    m.nombre AS materia
+    FROM lecciones l
+    LEFT JOIN usuarios u ON u.id = l.id_profesor
+    LEFT JOIN materias m ON m.id = l.id_materia
+    ORDER BY l.id DESC';
+    return PaginationHandler::paginate(($sql));
+  }
+
   static function by_id($id)
   {
     // Un registro con $id
